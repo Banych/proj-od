@@ -1,0 +1,177 @@
+{
+    "requests": [
+        {
+            "id": "7692",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7693",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7694",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7695",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7696",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7697",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7698",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7699",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7700",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7701",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7702",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7703",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7704",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7705",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7706",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7707",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7708",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7709",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        },
+        {
+            "id": "7710",
+            "type": "CorrectionReturn",
+            "salesOrganization": "3803",
+            "warehouse": "asda",
+            "date": "11/02/2025",
+            "comment": "asdasda",
+            "resource": ""
+        }
+    ],
+    "users": [],
+    "messages": []
+}
