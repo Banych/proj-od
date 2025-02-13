@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/select'
 import {
     CreateRequestDTO,
-    RequestDTO,
     RequestTypeDTO,
     SalesOrganizationTypeDTO,
 } from '@/types/dtos'

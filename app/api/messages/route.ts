@@ -14,3 +14,16 @@ export async function GET(
 
     return NextResponse.json(messages)
 }
+
+export async function POST(request: NextRequest) {
+    const { requestId, message, userId } = await request.json()
+
+    const createdMessage = await messagesClient.createMessage({
+        message,
+        requestId,
+        userId,
+        date: new Date().toISOString(),
+    })
+
+    return NextResponse.json(createdMessage)
+}

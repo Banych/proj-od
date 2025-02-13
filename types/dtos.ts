@@ -25,14 +25,22 @@ export type SalesOrganizationTypeDTO =
     | '3806'
 
 export type MessageDTO = {
+    id: string
     message: string
     requestId: string
     userId: string
+    date: string
+}
+
+export type CreateMessageDTO = Omit<MessageDTO, 'id'>
+
+export type MessageWithUserDTO = MessageDTO & {
+    user: Omit<UserDTO, 'role'>
 }
 
 export type UserDTO = {
     id: string
-    name: string
+    username: string
     role: RoleDTO
 }
 

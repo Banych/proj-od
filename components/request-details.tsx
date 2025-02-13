@@ -1,20 +1,26 @@
-import { MessageDTO, RequestDTO } from '@/types/dtos'
+import Messages from '@/components/messages'
+import defaultRequestTypes from '@/constants/default-request-types'
+import { MessageWithUserDTO, RequestDTO } from '@/types/dtos'
 import { FC } from 'react'
 
 type RequestDetailsProps = {
     item: RequestDTO
-    messages?: MessageDTO[]
+    messages?: MessageWithUserDTO[]
 }
 
-const RequestDetails: FC<RequestDetailsProps> = ({ item }) => {
+const RequestDetails: FC<RequestDetailsProps> = ({ item, messages }) => {
+    const formattedType = defaultRequestTypes.find(
+        (type) => type.value === item.type
+    )?.text
+
     return (
-        <div className="flex flex-col gap-4">
-            <h3 className="text-2xl">Запрос №{item.id}</h3>
+        <div className="flex flex-col gap-4 pb-4">
+            <h3 className="text-2xl font-bold">Запрос №{item.id}</h3>
 
             <div className="grid auto-rows-auto grid-cols-4 gap-2">
                 <div className="flex flex-col gap-2">
                     <div className="font-bold">Тип запроса:</div>
-                    <div>{item.type}</div>
+                    <div>{formattedType}</div>
                 </div>
                 <div className="flex flex-col gap-2">
                     <div className="font-bold">Организация:</div>
@@ -30,12 +36,12 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item }) => {
                 </div>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 pb-4">
                 <div className="font-bold">ОД/Текс</div>
                 <div>{item.comment}</div>
             </div>
 
-            <div className="flex flex-col gap-2"></div>
+            <Messages messages={messages || []} requestId={item.id} />
         </div>
     )
 }
