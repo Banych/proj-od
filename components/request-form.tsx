@@ -22,6 +22,7 @@ import { DatePicker } from '@/components/ui/date-picker'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
+import { useRouter } from 'next/navigation'
 
 const RequestForm = () => {
     const [requestType, setRequestType] = useState<RequestTypeDTO | undefined>()
@@ -34,6 +35,7 @@ const RequestForm = () => {
     const [resource, setResource] = useState<string>('')
 
     const { toast } = useToast()
+    const { push } = useRouter()
 
     const isResourceShown = useMemo(
         () => requestType === 'OneDayDelivery',
@@ -85,17 +87,32 @@ const RequestForm = () => {
                 resource,
             }
 
-            await fetch('/api/requests', {
+            const response = await fetch('/api/requests', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
             })
+
+            if (response.ok) {
+                toast({
+                    variant: 'default',
+                    title: 'Запрос успешно отправлен',
+                })
+                const id = (await response.json()).id
+                push('/requests/' + id)
+            } else {
+                toast({
+                    variant: 'destructive',
+                    title: 'Ошибка отправки запроса',
+                })
+            }
         },
         [
             comment,
             date,
+            push,
             requestType,
             resource,
             salesOrganization,

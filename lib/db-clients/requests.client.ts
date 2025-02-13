@@ -14,7 +14,7 @@ export default {
         const result = await fetch(DEFAULT_API_URL + `/requests/${id}`)
         return result.json()
     },
-    createRequest: async (request: RequestDTO): Promise<Request> => {
+    createRequest: async (request: RequestDTO): Promise<RequestDTO> => {
         const result = await fetch(DEFAULT_API_URL + '/requests', {
             method: 'POST',
             headers: {

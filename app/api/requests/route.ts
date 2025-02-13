@@ -12,17 +12,26 @@ export async function POST(request: NextRequest) {
 
     const lastId = lastRequest.length ? lastRequest[0].id : 0
 
-    requestsClient.createRequest({
+    const result = await requestsClient.createRequest({
         ...body,
         id: (Number(lastId) + 1).toString(),
     })
 
-    return NextResponse.json(body)
+    console.log('Request is created :::::', result)
+
+    return NextResponse.json(result)
 }
 
 export async function GET() {
-    console.log('GET /api/requests')
-    const requests = await requestsClient.getRequests({})
-
-    return NextResponse.json(requests)
+    try {
+        const requests = await requestsClient.getRequests({})
+        console.log('requests response ::::', requests)
+        return NextResponse.json(requests)
+    } catch (error) {
+        console.error('Error fetching requests:', error)
+        return NextResponse.json(
+            { message: 'Internal Server Error' },
+            { status: 500 }
+        )
+    }
 }

@@ -1,12 +1,10 @@
 import RequestItemList from '@/components/request-item-list'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import requestsClient from '@/lib/db-clients/requests.client'
 import { RequestDTO } from '@/types/dtos'
 
 const RequestsList = async () => {
-    const request = await fetch('http://localhost:3000/api/requests', {
-        method: 'GET',
-    })
-    const requests: RequestDTO[] = await request.json()
+    const requests: RequestDTO[] = await requestsClient.getRequests({})
 
     return (
         <ScrollArea>
