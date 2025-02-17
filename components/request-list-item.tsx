@@ -1,17 +1,24 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { RequestDTO } from '@/types/dtos'
-import { Trash } from 'lucide-react'
+import { Trash, TriangleAlert } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { FC, Fragment, useCallback } from 'react'
+import { FC, Fragment, useCallback, useMemo } from 'react'
+
+import { Button } from '@/components/ui/button'
+import { getTypeName } from '@/lib/utils'
+import { RequestDTO, UserDTO } from '@/types/dtos'
 
 type RequestItemProps = {
     item: RequestDTO
+    user: UserDTO
 }
 
-const RequestItemList: FC<RequestItemProps> = ({ item }) => {
+const RequestListItem: FC<RequestItemProps> = ({ item, user }) => {
     const { push } = useRouter()
+
+    const isDeleteAllowed = useMemo(() => {
+        return user.role === 'Admin' || user.id === item.userId
+    }, [item.userId, user.id, user.role])
 
     const handleDelete = useCallback(() => {
         fetch(`http://localhost:3000/api/requests/${item.id}`, {
@@ -25,8 +32,14 @@ const RequestItemList: FC<RequestItemProps> = ({ item }) => {
 
     return (
         <Fragment>
+            <div className="flex items-center gap-2">
+                {item.id}
+                {item.status === 'incorrect' && (
+                    <TriangleAlert className="size-6 text-orange-700" />
+                )}
+            </div>
             <div>{item.date}</div>
-            <div>{item.type}</div>
+            <div>{getTypeName(item.type)}</div>
             <div>{item.salesOrganization}</div>
             <div>{item.warehouse}</div>
             <div>{item.resource}</div>
@@ -38,6 +51,7 @@ const RequestItemList: FC<RequestItemProps> = ({ item }) => {
                     variant="destructive"
                     size="icon"
                     onClick={handleDelete}
+                    disabled={!isDeleteAllowed}
                 >
                     <Trash className="size-6" />
                 </Button>
@@ -46,4 +60,4 @@ const RequestItemList: FC<RequestItemProps> = ({ item }) => {
     )
 }
 
-export default RequestItemList
+export default RequestListItem

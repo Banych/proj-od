@@ -1,9 +1,10 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import usersClient from '@/lib/db-clients/users.client'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(req: NextRequest, res: NextResponse) {
+import usersClient from '@/lib/db-clients/users.client'
+
+export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData()
         const username = formData.get('username') as string
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         }
 
         const token = jwt.sign(
-            { id: user.id, username: user.username },
+            { id: user.id, username: user.username, role: user.role },
             process.env.NEXTAUTH_SECRET,
             {
                 expiresIn: '1h',
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         return NextResponse.json({
             token,
-            user: { id: user.id, username: user.username },
+            user: { id: user.id, username: user.username, role: user.role },
         })
     } catch (error) {
         console.error('Error in login:', error)

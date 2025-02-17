@@ -54,6 +54,9 @@ export default {
                 user: {
                     id: user.id,
                     username: user.username,
+                    name: user.name,
+                    surname: user.surname,
+                    email: user.email,
                 },
             }
         })

@@ -1,6 +1,8 @@
-import messagesClient from '@/lib/db-clients/messages.client'
-import { MessageDTO } from '@/types/dtos'
 import { NextRequest, NextResponse } from 'next/server'
+
+import messagesClient from '@/lib/db-clients/messages.client'
+import requestsClient from '@/lib/db-clients/requests.client'
+import { MessageDTO } from '@/types/dtos'
 
 export async function GET(
     request: NextRequest,
@@ -16,7 +18,7 @@ export async function GET(
 }
 
 export async function POST(request: NextRequest) {
-    const { requestId, message, userId } = await request.json()
+    const { requestId, message, userId, needCorrection } = await request.json()
 
     const createdMessage = await messagesClient.createMessage({
         message,
@@ -24,6 +26,15 @@ export async function POST(request: NextRequest) {
         userId,
         date: new Date().toISOString(),
     })
+
+    const requestToUpdate = await requestsClient.getRequest(requestId)
+
+    if (needCorrection) {
+        await requestsClient.updateRequest(requestId, {
+            ...requestToUpdate,
+            status: 'incorrect',
+        })
+    }
 
     return NextResponse.json(createdMessage)
 }

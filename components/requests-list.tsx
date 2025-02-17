@@ -1,14 +1,38 @@
-import RequestItemList from '@/components/request-item-list'
+import { FC } from 'react'
+
+import RequestListItem from '@/components/request-list-item'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import requestsClient from '@/lib/db-clients/requests.client'
+import getSessionUser from '@/lib/get-session-user'
 import { RequestDTO } from '@/types/dtos'
 
-const RequestsList = async () => {
-    const requests: RequestDTO[] = await requestsClient.getRequests({})
+type RequestsListProps = {
+    initialRequests?: RequestDTO[]
+    forceUseInitialRequests?: boolean
+}
+
+const RequestsList: FC<RequestsListProps> = async ({
+    initialRequests,
+    forceUseInitialRequests,
+}) => {
+    const dbUser = await getSessionUser()
+
+    if (!dbUser) {
+        return null
+    }
+
+    const requests: RequestDTO[] = forceUseInitialRequests
+        ? initialRequests || []
+        : await requestsClient.getRequests({})
+
+    if (!requests.length) {
+        return <div className="text-2xl">No requests</div>
+    }
 
     return (
         <ScrollArea>
-            <div className="grid auto-rows-auto grid-cols-6 gap-2">
+            <div className="grid auto-rows-auto grid-cols-7 gap-2">
+                <div className="font-bold">ID</div>
                 <div className="font-bold">Date</div>
                 <div className="font-bold">Type</div>
                 <div className="font-bold">Sales Organization</div>
@@ -17,7 +41,11 @@ const RequestsList = async () => {
                 <div className="font-bold">Actions</div>
 
                 {requests.map((request) => (
-                    <RequestItemList key={request.id} item={request} />
+                    <RequestListItem
+                        key={request.id}
+                        item={request}
+                        user={dbUser}
+                    />
                 ))}
             </div>
             <ScrollBar orientation="vertical" />

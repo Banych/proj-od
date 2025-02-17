@@ -1,11 +1,12 @@
 import bcrypt from 'bcryptjs'
 import { v4 as uuidv4 } from 'uuid'
-import { getUserByUsername } from '@/lib/db-clients/users.client'
 import { NextRequest, NextResponse } from 'next/server'
+
+import usersClient from '@/lib/db-clients/users.client'
 
 const API_URL = 'http://localhost:8000/users'
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
     try {
         const { username, password } = await req.json()
 
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             )
         }
 
-        const existingUser = await getUserByUsername(username)
+        const existingUser = await usersClient.getUserByUsername(username)
         if (existingUser) {
             return NextResponse.json(
                 { message: 'User with this username already exists' },
@@ -29,6 +30,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             id: uuidv4(),
             username,
             password: hashedPassword,
+            role: 'Manager',
         }
 
         const response = await fetch(API_URL, {

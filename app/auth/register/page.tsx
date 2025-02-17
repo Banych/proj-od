@@ -2,9 +2,10 @@
 
 import { useCallback, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+
 import InputWithLabel from '@/components/ui/input-with-label'
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
 
 const RegisterPage = () => {
     const [username, setUsername] = useState('')

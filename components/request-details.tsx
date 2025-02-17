@@ -1,21 +1,43 @@
-import Messages from '@/components/messages'
-import defaultRequestTypes from '@/constants/default-request-types'
-import { MessageWithUserDTO, RequestDTO } from '@/types/dtos'
+import { TriangleAlert } from 'lucide-react'
+import Link from 'next/link'
 import { FC } from 'react'
+
+import Messages from '@/components/messages'
+import { Button } from '@/components/ui/button'
+import { getTypeName } from '@/lib/utils'
+import { MessageWithUserDTO, RequestDTO, UserDTO } from '@/types/dtos'
 
 type RequestDetailsProps = {
     item: RequestDTO
+    user: UserDTO
     messages?: MessageWithUserDTO[]
 }
 
-const RequestDetails: FC<RequestDetailsProps> = ({ item, messages }) => {
-    const formattedType = defaultRequestTypes.find(
-        (type) => type.value === item.type
-    )?.text
+const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
+    const formattedType = getTypeName(item.type)
+
+    const isEditVisible =
+        user.role === 'Admin' ||
+        user.role === 'Dispatcher' ||
+        user.id === item.userId
 
     return (
         <div className="flex flex-col gap-4 pb-4">
-            <h3 className="text-2xl font-bold">Запрос №{item.id}</h3>
+            <div className="flex items-center justify-between gap-4">
+                <h3 className="flex items-center gap-4 text-2xl font-bold">
+                    Запрос №{item.id}
+                    {item.status === 'incorrect' && (
+                        <TriangleAlert className="size-6 text-orange-700" />
+                    )}
+                </h3>
+                {isEditVisible && (
+                    <div className="flex items-center gap-2">
+                        <Link href={`/requests/${item.id}/edit`}>
+                            <Button variant="outline">Редактировать</Button>
+                        </Link>
+                    </div>
+                )}
+            </div>
 
             <div className="grid auto-rows-auto grid-cols-4 gap-2">
                 <div className="flex flex-col gap-2">

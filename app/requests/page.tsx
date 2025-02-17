@@ -1,5 +1,7 @@
 import MyRequests from '@/app/requests/my/page'
 
-export default function Home() {
+const RequestsPage = () => {
     return <MyRequests />
 }
+
+export default RequestsPage

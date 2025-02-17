@@ -3,9 +3,10 @@
 import { useCallback, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+
 import InputWithLabel from '@/components/ui/input-with-label'
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
 
 const LoginPage = () => {
     const [username, setUsername] = useState('')

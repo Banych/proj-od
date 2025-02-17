@@ -6,9 +6,13 @@ export type RequestDTO = {
     comment: string
     resource: string
     id: string
+    status: RequestDTOStatus
+    userId: string
 }
 
-export type CreateRequestDTO = Omit<RequestDTO, 'id'>
+export type RequestDTOStatus = 'created' | 'completed' | 'incorrect'
+
+export type CreateRequestDTO = Omit<RequestDTO, 'id' | 'userId'>
 
 export type RequestTypeDTO =
     | 'OneDayDelivery'
@@ -32,7 +36,9 @@ export type MessageDTO = {
     date: string
 }
 
-export type CreateMessageDTO = Omit<MessageDTO, 'id'>
+export type CreateMessageDTO = Omit<MessageDTO, 'id'> & {
+    needCorrection?: boolean
+}
 
 export type MessageWithUserDTO = MessageDTO & {
     user: Omit<UserDTO, 'role'>
@@ -42,6 +48,9 @@ export type UserDTO = {
     id: string
     username: string
     role: RoleDTO
+    name: string
+    surname: string
+    email: string
 }
 
 export type RoleDTO = 'Dispatcher' | 'Manager' | 'Admin'

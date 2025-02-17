@@ -1,10 +1,12 @@
+import { compareDesc } from 'date-fns'
+import { FC } from 'react'
+
 import RequestDetails from '@/components/request-details'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import messagesClient from '@/lib/db-clients/messages.client'
 import requestsClient from '@/lib/db-clients/requests.client'
+import getSessionUser from '@/lib/get-session-user'
 import { MessageWithUserDTO } from '@/types/dtos'
-import { compareDesc } from 'date-fns'
-import { FC } from 'react'
 
 type RequestPageProps = {
     params: {
@@ -14,6 +16,12 @@ type RequestPageProps = {
 
 const RequestPage: FC<RequestPageProps> = async ({ params }) => {
     const { id } = params
+
+    const dbUser = await getSessionUser()
+
+    if (!dbUser) {
+        return null
+    }
 
     const requestItem = await requestsClient.getRequest(id)
 
@@ -29,7 +37,11 @@ const RequestPage: FC<RequestPageProps> = async ({ params }) => {
 
     return (
         <ScrollArea>
-            <RequestDetails item={requestItem} messages={messages} />
+            <RequestDetails
+                item={requestItem}
+                messages={messages}
+                user={dbUser}
+            />
             <ScrollBar orientation="vertical" />
         </ScrollArea>
     )

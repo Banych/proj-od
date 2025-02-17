@@ -1,5 +1,10 @@
 'use client'
 
+import { ClassValue } from 'clsx'
+import { signOut, useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { FC, useMemo } from 'react'
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,10 +15,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { ClassValue } from 'clsx'
-import { signOut, useSession } from 'next-auth/react'
-import Link from 'next/link'
-import { FC, useMemo } from 'react'
 
 type UserInfoSmallProps = {
     className?: ClassValue
@@ -65,6 +66,9 @@ const UserInfoSmall: FC<UserInfoSmallProps> = ({ className }) => {
             <DropdownMenuContent>
                 <DropdownMenuItem asChild>
                     <Link href="/profile">Профиль</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link href="/requests/my">Мои запросы</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => signOut()}>
                     Выйти

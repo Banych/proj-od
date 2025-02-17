@@ -1,6 +1,9 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { ClassValue } from 'clsx'
+import { parse } from 'date-fns'
 
 import {
     Select,
@@ -11,6 +14,7 @@ import {
 } from '@/components/ui/select'
 import {
     CreateRequestDTO,
+    RequestDTO,
     RequestTypeDTO,
     SalesOrganizationTypeDTO,
 } from '@/types/dtos'
@@ -21,17 +25,39 @@ import { DatePicker } from '@/components/ui/date-picker'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
-import { useRouter } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
-const RequestForm = () => {
-    const [requestType, setRequestType] = useState<RequestTypeDTO | undefined>()
+type RequestFormProps = {
+    className?: ClassValue
+    onFormSubmit?: (value: CreateRequestDTO) => Promise<RequestDTO>
+    initialValues?: RequestDTO
+    submitButtonText?: string
+}
+
+const RequestForm: FC<RequestFormProps> = ({
+    className,
+    initialValues,
+    onFormSubmit,
+    submitButtonText = 'Отправить',
+}) => {
+    const [requestType, setRequestType] = useState<RequestTypeDTO | undefined>(
+        initialValues?.type
+    )
     const [salesOrganization, setSalesOrganization] = useState<
         SalesOrganizationTypeDTO | undefined
-    >()
-    const [warehouse, setWarehouse] = useState<string>('')
-    const [date, setDate] = useState<Date>(new Date())
-    const [comment, setComment] = useState<string>('')
-    const [resource, setResource] = useState<string>('')
+    >(initialValues?.salesOrganization)
+    const [warehouse, setWarehouse] = useState<string>(
+        initialValues?.warehouse || ''
+    )
+    const [date, setDate] = useState<Date>(
+        initialValues?.date
+            ? parse(initialValues.date, 'dd/MM/yyyy', new Date())
+            : new Date()
+    )
+    const [comment, setComment] = useState<string>(initialValues?.comment || '')
+    const [resource, setResource] = useState<string>(
+        initialValues?.resource || ''
+    )
 
     const { toast } = useToast()
     const { push } = useRouter()
@@ -84,23 +110,31 @@ const RequestForm = () => {
                 date: date.toLocaleDateString(),
                 comment,
                 resource,
+                status: 'created',
             }
 
-            const response = await fetch('/api/requests', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
+            const response = onFormSubmit
+                ? await onFormSubmit({ ...data })
+                : await fetch('/api/requests', {
+                      method: 'POST',
+                      cache: 'no-cache',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(data),
+                  })
 
-            if (response.ok) {
+            if (response) {
                 toast({
                     variant: 'default',
                     title: 'Запрос успешно отправлен',
                 })
-                const id = (await response.json()).id
-                push('/requests/' + id)
+                const id =
+                    'json' in response
+                        ? (await response.json()).id
+                        : response.id
+
+                push(`/requests/${id}`)
             } else {
                 toast({
                     variant: 'destructive',
@@ -111,6 +145,7 @@ const RequestForm = () => {
         [
             comment,
             date,
+            onFormSubmit,
             push,
             requestType,
             resource,
@@ -153,7 +188,10 @@ const RequestForm = () => {
     )
 
     return (
-        <form className="flex grow flex-col gap-4" onSubmit={handleSubmit}>
+        <form
+            className={cn('flex grow flex-col gap-4', className)}
+            onSubmit={handleSubmit}
+        >
             <div className="flex items-center gap-2">
                 <Select
                     value={requestType}
@@ -212,7 +250,7 @@ const RequestForm = () => {
                 )}
             </div>
             <div className="flex justify-end">
-                <Button type="submit">Отправить</Button>
+                <Button type="submit">{submitButtonText}</Button>
             </div>
         </form>
     )

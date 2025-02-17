@@ -1,5 +1,6 @@
-import requestsClient from '@/lib/db-clients/requests.client'
 import { NextRequest, NextResponse } from 'next/server'
+
+import requestsClient from '@/lib/db-clients/requests.client'
 
 export async function DELETE(
     request: NextRequest,
