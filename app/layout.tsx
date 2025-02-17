@@ -5,6 +5,7 @@ import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 import Header from '@/components/header'
 import SessionProvider from '@/components/providers/session-provider'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -33,10 +34,12 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <SessionProvider>
-                    <div className="container m-auto flex h-screen flex-col gap-2 p-4">
-                        <Header />
-                        {children}
-                    </div>
+                    <TooltipProvider>
+                        <div className="container m-auto flex h-screen flex-col gap-2 p-4">
+                            <Header />
+                            {children}
+                        </div>
+                    </TooltipProvider>
                     <Toaster />
                 </SessionProvider>
             </body>

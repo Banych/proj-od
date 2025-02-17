@@ -18,10 +18,12 @@ const Header = () => {
                 <Link href="/">
                     <h1>
                         <Image
-                            src="/logso.png"
+                            src="/logo.png"
                             alt="Мултон Патнерс"
+                            className="size-auto"
                             width={200}
                             height={80}
+                            priority
                         />
                     </h1>
                 </Link>

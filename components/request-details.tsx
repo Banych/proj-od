@@ -6,6 +6,11 @@ import Messages from '@/components/messages'
 import { Button } from '@/components/ui/button'
 import { getTypeName } from '@/lib/utils'
 import { MessageWithUserDTO, RequestDTO, UserDTO } from '@/types/dtos'
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 type RequestDetailsProps = {
     item: RequestDTO
@@ -27,7 +32,14 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
                 <h3 className="flex items-center gap-4 text-2xl font-bold">
                     Запрос №{item.id}
                     {item.status === 'incorrect' && (
-                        <TriangleAlert className="size-6 text-orange-700" />
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <TriangleAlert className="size-6 text-orange-700" />
+                            </TooltipTrigger>
+                            <TooltipContent className="text-base font-normal">
+                                Запрос некорректен
+                            </TooltipContent>
+                        </Tooltip>
                     )}
                 </h3>
                 {isEditVisible && (

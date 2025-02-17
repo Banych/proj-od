@@ -7,6 +7,11 @@ import { FC, Fragment, useCallback, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { getTypeName } from '@/lib/utils'
 import { RequestDTO, UserDTO } from '@/types/dtos'
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 type RequestItemProps = {
     item: RequestDTO
@@ -35,7 +40,12 @@ const RequestListItem: FC<RequestItemProps> = ({ item, user }) => {
             <div className="flex items-center gap-2">
                 {item.id}
                 {item.status === 'incorrect' && (
-                    <TriangleAlert className="size-6 text-orange-700" />
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <TriangleAlert className="size-6 text-orange-700" />
+                        </TooltipTrigger>
+                        <TooltipContent>Запрос некорректен</TooltipContent>
+                    </Tooltip>
                 )}
             </div>
             <div>{item.date}</div>
