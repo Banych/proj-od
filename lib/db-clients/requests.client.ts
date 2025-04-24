@@ -51,7 +51,7 @@ export default {
     },
     updateRequest: async (
         id: string,
-        request: CreateRequestDTO
+        request: Partial<CreateRequestDTO>
     ): Promise<RequestDTO> => {
         const result = await fetch(DEFAULT_API_URL + `/requests/${id}`, {
             method: 'PATCH',
