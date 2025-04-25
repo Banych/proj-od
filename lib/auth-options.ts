@@ -36,6 +36,10 @@ export const authOptions: NextAuthOptions = {
                 }
                 const formData = toFormData(data)
                 try {
+                    if (!process.env.NEXTAUTH_URL) {
+                        throw new Error('NEXTAUTH_URL is not defined')
+                    }
+
                     const url = new URL(
                         '/api/auth/login',
                         process.env.NEXTAUTH_URL
