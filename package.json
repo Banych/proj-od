@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "json-server": "npx json-server db.json --port 8000"
+    "json-server": "npx json-server db.json --port 8000",
+    "postinstall": "prisma generate --no-engine"
   },
   "dependencies": {
     "@mantine/hooks": "^7.17.5",
