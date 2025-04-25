@@ -31,8 +31,14 @@ const LoginPage = () => {
                     console.error('Sign in error:', response.error)
                     setError(response.error)
                     setLoading(false)
-                } else if (response?.ok) {
-                    router.push('/')
+                } else if (response?.ok && response?.url) {
+                    const oldUrl = new URL(response.url)
+                    const callbackUrl = oldUrl.searchParams.get('callbackUrl')
+                    if (callbackUrl) {
+                        router.push(callbackUrl)
+                    } else {
+                        router.push('/')
+                    }
                     setLoading(false)
                 }
             } catch (error: unknown) {
