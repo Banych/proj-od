@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { FC } from 'react'
 
 import { Button, buttonVariants } from '@/components/ui/button'
-import { Request, RequestStatus, Role } from '@/lib/generated/prisma'
+import { Request, RequestStatus, Role } from '@/generated/prisma-client'
 import { UserDTO } from '@/types/dtos'
 
 type RequestActionsProps = {

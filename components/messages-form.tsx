@@ -9,7 +9,7 @@ import InputWithLabel from '@/components/ui/input-with-label'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
 import { UserDTO } from '@/types/dtos'
-import { Role } from '@/lib/generated/prisma'
+import { Role } from '@/generated/prisma-client'
 
 type MessagesFormProps = {
     requestId: string

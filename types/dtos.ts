@@ -1,4 +1,4 @@
-import { Message, Request, User } from '@/lib/generated/prisma'
+import { Message, Request, User } from '@/generated/prisma-client'
 
 export type RequestWithUser = Request & {
     user: UserDTO

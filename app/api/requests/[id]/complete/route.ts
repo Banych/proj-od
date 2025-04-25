@@ -1,5 +1,5 @@
 import { db } from '@/lib/db'
-import { RequestStatus } from '@/lib/generated/prisma'
+import { RequestStatus } from '@/generated/prisma-client'
 
 import { NextRequest, NextResponse } from 'next/server'
 

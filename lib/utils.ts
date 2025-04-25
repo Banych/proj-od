@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge'
 
 import defaultRequestTypes from '@/constants/default-request-types'
 import defaultSalesOrganizationTypes from '@/constants/default-sales-organizations'
-import { RequestType, SalesOrganizationType } from '@/lib/generated/prisma'
+import { RequestType, SalesOrganizationType } from '@/generated/prisma-client'
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))

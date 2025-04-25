@@ -22,7 +22,7 @@ import {
     Request,
     RequestType,
     SalesOrganizationType,
-} from '@/lib/generated/prisma'
+} from '@/generated/prisma-client'
 import { cn } from '@/lib/utils'
 import { CreateRequestDTO } from '@/types/dtos'
 

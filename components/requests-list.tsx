@@ -11,7 +11,7 @@ import requestsClient from '@/lib/db-clients/requests.client'
 import { RequestWithUser, UserDTO } from '@/types/dtos'
 import { ArrowDown, BookCheck, Loader2 } from 'lucide-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { RequestStatus } from '@/lib/generated/prisma'
+import { RequestStatus } from '@/generated/prisma-client'
 import TableHeaderCell from '@/components/table-header-cell'
 
 type RequestsListProps = {

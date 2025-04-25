@@ -1,6 +1,6 @@
 import RequestsList from '@/components/requests-list'
 import { db } from '@/lib/db'
-import { RequestStatus, Role } from '@/lib/generated/prisma'
+import { RequestStatus, Role } from '@/generated/prisma-client'
 import getSessionUser from '@/lib/get-session-user'
 import { RequestWithUser } from '@/types/dtos'
 import { FC } from 'react'

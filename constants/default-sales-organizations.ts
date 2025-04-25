@@ -1,4 +1,4 @@
-import { SalesOrganizationType } from '@/lib/generated/prisma'
+import { SalesOrganizationType } from '@/generated/prisma-client'
 
 const salesOrganizations = Object.values(SalesOrganizationType).map(
     (value) => ({

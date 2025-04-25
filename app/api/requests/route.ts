@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { db } from '@/lib/db'
 import getSessionUser from '@/lib/get-session-user'
 import { CreateRequestDTO } from '@/types/dtos'
-import { RequestStatus, Role } from '@/lib/generated/prisma'
+import { RequestStatus, Role } from '@/generated/prisma-client'
 
 export async function POST(request: NextRequest) {
     const body = (await request.json()) as CreateRequestDTO

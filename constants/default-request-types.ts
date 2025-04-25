@@ -1,4 +1,4 @@
-import { RequestType } from '@/lib/generated/prisma'
+import { RequestType } from '@/generated/prisma-client'
 
 const defaultRequestTypes: {
     text: string

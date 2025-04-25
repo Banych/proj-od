@@ -8,7 +8,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { RequestStatus } from '@/lib/generated/prisma'
+import { RequestStatus } from '@/generated/prisma-client'
 import { getSalesOrganizationName, getTypeName } from '@/lib/utils'
 import { MessageWithUser, RequestWithUser, UserDTO } from '@/types/dtos'
 import { format } from 'date-fns'

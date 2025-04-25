@@ -1,4 +1,4 @@
-import { RequestStatus } from '@/lib/generated/prisma'
+import { RequestStatus } from '@/generated/prisma-client'
 
 const defaultStatuses: {
     value: RequestStatus

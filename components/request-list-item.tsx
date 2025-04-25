@@ -10,7 +10,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { RequestStatus, Role } from '@/lib/generated/prisma'
+import { RequestStatus, Role } from '@/generated/prisma-client'
 import { getSalesOrganizationName, getTypeName } from '@/lib/utils'
 import { RequestWithUser, UserDTO } from '@/types/dtos'
 import { format } from 'date-fns'
