@@ -16,5 +16,8 @@ export default withAuth({
 })
 
 export const config = {
-    matcher: ['/((?!_next/static|_next/image|favicon.ico).*)', '/api/(.*)'],
+    matcher: [
+        '/((?!^/_next/static|^/_next/image|^/favicon.ico).*)', // Exclude static assets and images
+        '/api/(.*)', // Protect API routes
+    ],
 }
