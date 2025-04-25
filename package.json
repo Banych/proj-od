@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "json-server": "npx json-server db.json --port 8000",
-    "postinstall": "prisma generate --no-engine"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@mantine/hooks": "^7.17.5",
