@@ -7,12 +7,14 @@ export default withAuth({
     },
     callbacks: {
         authorized: ({ req, token }) => {
-            // Allow access to the registration page without authentication
             if (req.nextUrl.pathname === '/auth/register') {
                 return true
             }
-            // Allow access if the user is authenticated
             return !!token
         },
     },
 })
+
+export const config = {
+    matcher: ['/((?!_next/static|_next/image|favicon.ico).*)', '/api/(.*)'],
+}
