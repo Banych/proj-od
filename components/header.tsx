@@ -5,8 +5,10 @@ import {
     NavigationMenu,
     NavigationMenuContent,
     NavigationMenuItem,
+    NavigationMenuLink,
     NavigationMenuList,
     NavigationMenuTrigger,
+    navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import UserInfoSmall from '@/components/user-info-small'
 import MenuListItem from '@/components/ui/menu-list-item'
