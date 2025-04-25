@@ -7,6 +7,9 @@ export default withAuth({
     },
     callbacks: {
         authorized: ({ req, token }) => {
+            if (req.nextUrl.pathname.startsWith('/_next/image')) {
+                return true
+            }
             if (req.nextUrl.pathname === '/auth/register') {
                 return true
             }
