@@ -1,10 +1,8 @@
 import bcrypt from 'bcryptjs'
-import { v4 as uuidv4 } from 'uuid'
 import { NextRequest, NextResponse } from 'next/server'
 
-import usersClient from '@/lib/db-clients/users.client'
-
-const API_URL = 'http://localhost:8000/users'
+import { db } from '@/lib/db'
+import { Role } from '@/lib/generated/prisma'
 
 export async function POST(req: NextRequest) {
     try {
@@ -17,7 +15,12 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        const existingUser = await usersClient.getUserByUsername(username)
+        const existingUser = await db.user.findUnique({
+            where: {
+                username,
+            },
+        })
+
         if (existingUser) {
             return NextResponse.json(
                 { message: 'User with this username already exists' },
@@ -27,21 +30,16 @@ export async function POST(req: NextRequest) {
 
         const hashedPassword = await bcrypt.hash(password, 10)
         const newUser = {
-            id: uuidv4(),
             username,
             password: hashedPassword,
-            role: 'Manager',
+            role: Role.DISPATCHER,
         }
 
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newUser),
+        const response = await db.user.create({
+            data: newUser,
         })
 
-        if (!response.ok) {
+        if (!response) {
             return NextResponse.json(
                 { message: 'Failed to create user' },
                 { status: 500 }

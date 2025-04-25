@@ -1,24 +1,24 @@
-import { RequestTypeDTO } from '@/types/dtos'
+import { RequestType } from '@/lib/generated/prisma'
 
 const defaultRequestTypes: {
     text: string
-    value: RequestTypeDTO
+    value: RequestType
 }[] = [
     {
         text: 'Доставка день в день',
-        value: 'OneDayDelivery',
+        value: RequestType.ONE_DAY_DELIVERY,
     },
     {
         text: 'Коррекционная продажа',
-        value: 'CorrectionSale',
+        value: RequestType.CORRECTION_SALE,
     },
     {
         text: 'Коррекционный возврат',
-        value: 'CorrectionReturn',
+        value: RequestType.CORRECTION_RETURN,
     },
     {
         text: 'Сэмплинг / Выкуп / Самовывоз',
-        value: 'Sampling',
+        value: RequestType.SAMPLING,
     },
 ]
 

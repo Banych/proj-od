@@ -8,24 +8,30 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { getTypeName } from '@/lib/utils'
-import { MessageWithUserDTO, RequestDTO, UserDTO } from '@/types/dtos'
+import { RequestStatus } from '@/lib/generated/prisma'
+import { getSalesOrganizationName, getTypeName } from '@/lib/utils'
+import { MessageWithUser, RequestWithUser, UserDTO } from '@/types/dtos'
+import { format } from 'date-fns'
 
 type RequestDetailsProps = {
-    item: RequestDTO
+    item: RequestWithUser
     user: UserDTO
-    messages?: MessageWithUserDTO[]
+    messages?: MessageWithUser[]
 }
 
 const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
     const formattedType = getTypeName(item.type)
 
+    const formattedSalesOrganization = getSalesOrganizationName(
+        item.salesOrganization
+    )
+
     return (
         <div className="flex flex-col gap-4 pb-4">
             <div className="flex items-center justify-between gap-4">
                 <h3 className="flex items-center gap-4 text-2xl font-bold">
-                    Запрос №{item.id}
-                    {item.status === 'incorrect' && (
+                    Запрос №{item.orderNumber}
+                    {item.status === RequestStatus.INCORRECT && (
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <TriangleAlert className="size-6 text-orange-700" />
@@ -46,7 +52,11 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
                 </div>
                 <div className="flex flex-col gap-2">
                     <div className="font-bold">Организация:</div>
-                    <div>{item.salesOrganization}</div>
+                    <div>
+                        {formattedSalesOrganization
+                            ? formattedSalesOrganization
+                            : 'Не указана'}
+                    </div>
                 </div>
                 <div className="flex flex-col gap-2">
                     <div className="font-bold">Склад:</div>
@@ -54,7 +64,7 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
                 </div>
                 <div className="flex flex-col gap-2">
                     <div className="font-bold">Дата:</div>
-                    <div>{item.date}</div>
+                    <div>{format(item.date, 'dd.MM.yyyy')}</div>
                 </div>
             </div>
 

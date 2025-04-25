@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import messagesClient from '@/lib/db-clients/messages.client'
-import requestsClient from '@/lib/db-clients/requests.client'
-import { MessageDTO } from '@/types/dtos'
+import { db } from '@/lib/db'
 
 export async function GET(
     request: NextRequest,
@@ -10,9 +8,27 @@ export async function GET(
 ) {
     const { requestId } = (await params).params
 
-    const messages: MessageDTO[] = await messagesClient.getMessages({
-        requestId,
+    const messages = await db.message.findMany({
+        where: {
+            requestId,
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    role: true,
+                    name: true,
+                    surname: true,
+                    email: true,
+                },
+            },
+        },
     })
+
+    if (!messages) {
+        return NextResponse.json('No messages found', { status: 404 })
+    }
 
     return NextResponse.json(messages)
 }
@@ -20,19 +36,22 @@ export async function GET(
 export async function POST(request: NextRequest) {
     const { requestId, message, userId, needCorrection } = await request.json()
 
-    const createdMessage = await messagesClient.createMessage({
-        message,
-        requestId,
-        userId,
-        date: new Date().toISOString(),
+    const createdMessage = await db.message.create({
+        data: {
+            requestId,
+            message,
+            userId,
+        },
     })
 
-    const requestToUpdate = await requestsClient.getRequest(requestId)
-
     if (needCorrection) {
-        await requestsClient.updateRequest(requestId, {
-            ...requestToUpdate,
-            status: 'incorrect',
+        await db.request.update({
+            where: {
+                id: requestId,
+            },
+            data: {
+                status: 'INCORRECT',
+            },
         })
     }
 

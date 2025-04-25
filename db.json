@@ -219,6 +219,17 @@
       "resource": "",
       "status": "incorrect",
       "userId": "1312ce13-9a56-4a09-b11f-05527068b341"
+    },
+    {
+      "id": "8204",
+      "type": "CorrectionSale",
+      "salesOrganization": "3802",
+      "warehouse": "fsdfdsdf",
+      "date": "4/24/2025",
+      "comment": "sdsdfsdf",
+      "resource": "",
+      "status": "created",
+      "userId": "4851f828-d716-4e04-924f-7ca53688228f"
     }
   ],
   "users": [
@@ -228,7 +239,7 @@
       "email": "banycha1993@yandex.ru",
       "username": "banych",
       "id": "4851f828-d716-4e04-924f-7ca53688228f",
-      "role": "Dispatcher",
+      "role": "Admin",
       "password": "$2a$10$bzsZQJyXdZUNnFbYWi8x0.XCSzZlsP9AhxoNGDTKdBHgV3b1OVSXy"
     },
     {

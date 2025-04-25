@@ -1,4 +1,5 @@
-import requestsClient from '@/lib/db-clients/requests.client'
+import { db } from '@/lib/db'
+import { RequestStatus } from '@/lib/generated/prisma'
 
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -8,8 +9,13 @@ export async function GET(
 ) {
     const { id } = (await params).params
 
-    await requestsClient.updateRequest(id, {
-        status: 'completed',
+    await db.request.update({
+        where: {
+            id,
+        },
+        data: {
+            status: RequestStatus.COMPLETED,
+        },
     })
 
     return NextResponse.json('ok', {

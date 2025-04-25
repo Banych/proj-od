@@ -1,12 +1,10 @@
-import { SalesOrganizationTypeDTO } from '@/types/dtos'
+import { SalesOrganizationType } from '@/lib/generated/prisma'
 
-const salesOrganizations: SalesOrganizationTypeDTO[] = [
-    '3801',
-    '3802',
-    '3803',
-    '3804',
-    '3805',
-    '3806',
-]
+const salesOrganizations = Object.values(SalesOrganizationType).map(
+    (value) => ({
+        value,
+        text: value.replace('SALES_', ''),
+    })
+)
 
 export default salesOrganizations

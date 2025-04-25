@@ -1,11 +1,11 @@
 'use client'
 
-import { FC, useCallback, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { FC, useCallback, useState } from 'react'
 
-import { UserDTO } from '@/types/dtos'
-import InputWithLabel from '@/components/ui/input-with-label'
 import { Button } from '@/components/ui/button'
+import InputWithLabel from '@/components/ui/input-with-label'
+import { UserDTO } from '@/types/dtos'
 
 type ProfileFormProps = {
     user: UserDTO
@@ -86,12 +86,12 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }) => {
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <InputWithLabel
                 label="Имя"
-                value={name}
+                value={name || ''}
                 onChange={handleNameChange}
             />
             <InputWithLabel
                 label="Фамилия"
-                value={surname}
+                value={surname || ''}
                 onChange={handleSurnameChange}
             />
             <InputWithLabel
@@ -101,7 +101,7 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }) => {
             />
             <InputWithLabel
                 label="Почта"
-                value={email}
+                value={email || ''}
                 type="email"
                 onChange={handleEmailChange}
             />

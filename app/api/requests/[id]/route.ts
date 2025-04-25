@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import requestsClient from '@/lib/db-clients/requests.client'
+import { db } from '@/lib/db'
 
 export async function DELETE(
     request: NextRequest,
@@ -8,7 +8,11 @@ export async function DELETE(
 ) {
     const { id } = (await params).params
 
-    await requestsClient.deleteRequest(id)
+    await db.request.delete({
+        where: {
+            id,
+        },
+    })
 
     return NextResponse.json({ id })
 }
@@ -19,7 +23,23 @@ export async function GET(
 ) {
     const { id } = (await params).params
 
-    const requestItem = await requestsClient.getRequest(id)
+    const requestItem = await db.request.findUnique({
+        where: {
+            id,
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    role: true,
+                    name: true,
+                    surname: true,
+                    email: true,
+                },
+            },
+        },
+    })
 
     return NextResponse.json(requestItem)
 }

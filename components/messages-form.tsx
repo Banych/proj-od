@@ -9,6 +9,7 @@ import InputWithLabel from '@/components/ui/input-with-label'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
 import { UserDTO } from '@/types/dtos'
+import { Role } from '@/lib/generated/prisma'
 
 type MessagesFormProps = {
     requestId: string
@@ -24,7 +25,7 @@ const MessagesForm: FC<MessagesFormProps> = ({ requestId, user }) => {
     const { refresh } = useRouter()
 
     const isNeedCorrectionVisible = useMemo(
-        () => user.role === 'Dispatcher' || user.role === 'Admin',
+        () => user.role === Role.DISPATCHER || user.role === Role.ADMIN,
         [user.role]
     )
 

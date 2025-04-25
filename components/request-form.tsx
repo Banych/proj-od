@@ -1,10 +1,12 @@
 'use client'
 
-import { FC, useCallback, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { ClassValue } from 'clsx'
-import { parse } from 'date-fns'
+import { useRouter } from 'next/navigation'
+import { FC, useCallback, useMemo, useState } from 'react'
 
+import { Button } from '@/components/ui/button'
+import { DatePicker } from '@/components/ui/date-picker'
+import { Input } from '@/components/ui/input'
 import {
     Select,
     SelectContent,
@@ -12,25 +14,22 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import {
-    CreateRequestDTO,
-    RequestDTO,
-    RequestTypeDTO,
-    SalesOrganizationTypeDTO,
-} from '@/types/dtos'
+import { Textarea } from '@/components/ui/textarea'
 import defaultRequestTypes from '@/constants/default-request-types'
 import salesOrganizations from '@/constants/default-sales-organizations'
-import { Input } from '@/components/ui/input'
-import { DatePicker } from '@/components/ui/date-picker'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
+import {
+    Request,
+    RequestType,
+    SalesOrganizationType,
+} from '@/lib/generated/prisma'
 import { cn } from '@/lib/utils'
+import { CreateRequestDTO } from '@/types/dtos'
 
 type RequestFormProps = {
     className?: ClassValue
-    onFormSubmit?: (value: CreateRequestDTO) => Promise<RequestDTO>
-    initialValues?: RequestDTO
+    onFormSubmit?: (value: CreateRequestDTO) => Promise<Request>
+    initialValues?: CreateRequestDTO
     submitButtonText?: string
 }
 
@@ -40,19 +39,17 @@ const RequestForm: FC<RequestFormProps> = ({
     onFormSubmit,
     submitButtonText = 'Отправить',
 }) => {
-    const [requestType, setRequestType] = useState<RequestTypeDTO | undefined>(
+    const [requestType, setRequestType] = useState<RequestType | undefined>(
         initialValues?.type
     )
     const [salesOrganization, setSalesOrganization] = useState<
-        SalesOrganizationTypeDTO | undefined
+        SalesOrganizationType | undefined
     >(initialValues?.salesOrganization)
     const [warehouse, setWarehouse] = useState<string>(
         initialValues?.warehouse || ''
     )
     const [date, setDate] = useState<Date>(
-        initialValues?.date
-            ? parse(initialValues.date, 'dd/MM/yyyy', new Date())
-            : new Date()
+        initialValues?.date ? initialValues.date : new Date()
     )
     const [comment, setComment] = useState<string>(initialValues?.comment || '')
     const [resource, setResource] = useState<string>(
@@ -63,7 +60,7 @@ const RequestForm: FC<RequestFormProps> = ({
     const { push } = useRouter()
 
     const isResourceShown = useMemo(
-        () => requestType === 'OneDayDelivery',
+        () => requestType === RequestType.ONE_DAY_DELIVERY,
         [requestType]
     )
 
@@ -107,10 +104,9 @@ const RequestForm: FC<RequestFormProps> = ({
                 type: requestType,
                 salesOrganization,
                 warehouse,
-                date: date.toLocaleDateString(),
+                date: date,
                 comment,
                 resource,
-                status: 'created',
             }
 
             const response = onFormSubmit
@@ -155,12 +151,12 @@ const RequestForm: FC<RequestFormProps> = ({
         ]
     )
 
-    const handleRequestTypeChange = useCallback((value: RequestTypeDTO) => {
+    const handleRequestTypeChange = useCallback((value: RequestType) => {
         setRequestType(value)
     }, [])
 
     const handleSalesOrganizationChange = useCallback(
-        (value: SalesOrganizationTypeDTO) => {
+        (value: SalesOrganizationType) => {
             setSalesOrganization(value)
         },
         []
@@ -218,10 +214,10 @@ const RequestForm: FC<RequestFormProps> = ({
                     <SelectContent>
                         {salesOrganizations.map((salesOrganization) => (
                             <SelectItem
-                                key={salesOrganization}
-                                value={salesOrganization}
+                                key={salesOrganization.value}
+                                value={salesOrganization.value}
                             >
-                                {salesOrganization}
+                                {salesOrganization.text}
                             </SelectItem>
                         ))}
                     </SelectContent>

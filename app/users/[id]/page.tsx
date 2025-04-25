@@ -1,7 +1,8 @@
 import { FC } from 'react'
 
 import { Label } from '@/components/ui/label'
-import usersClient from '@/lib/db-clients/users.client'
+import { db } from '@/lib/db'
+import { notFound } from 'next/navigation'
 
 type UserDetailsPageProps = {
     params: Promise<{ id: string }>
@@ -10,7 +11,23 @@ type UserDetailsPageProps = {
 const UserDetailsPage: FC<UserDetailsPageProps> = async ({ params }) => {
     const { id } = await params
 
-    const user = await usersClient.getUser(id)
+    const user = await db.user.findUnique({
+        where: {
+            id,
+        },
+        select: {
+            id: true,
+            username: true,
+            role: true,
+            name: true,
+            surname: true,
+            email: true,
+        },
+    })
+
+    if (!user) {
+        notFound()
+    }
 
     return (
         <div className="grid auto-rows-min grid-cols-2 gap-4">

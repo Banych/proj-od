@@ -1,12 +1,12 @@
-import { RequestDTOStatus } from '@/types/dtos'
+import { RequestStatus } from '@/lib/generated/prisma'
 
 const defaultStatuses: {
-    value: RequestDTOStatus
+    value: RequestStatus
     text: string
 }[] = [
-    { value: 'created', text: 'Создан' },
-    { value: 'completed', text: 'Выполнен' },
-    { value: 'incorrect', text: 'Некорректен' },
+    { value: RequestStatus.CREATED, text: 'Создан' },
+    { value: RequestStatus.COMPLETED, text: 'Выполнен' },
+    { value: RequestStatus.INCORRECT, text: 'Некорректен' },
 ]
 
 export default defaultStatuses

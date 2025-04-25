@@ -1,10 +1,9 @@
 import { FC } from 'react'
 
 import RequestForm from '@/components/request-form'
-import messagesClient from '@/lib/db-clients/messages.client'
-import requestsClient from '@/lib/db-clients/requests.client'
+import { db } from '@/lib/db'
 import getSessionUser from '@/lib/get-session-user'
-import { CreateRequestDTO } from '@/types/dtos'
+import { CreateRequestDTO, RequestWithUser } from '@/types/dtos'
 
 type EditRequestPageProps = {
     params: Promise<{ id: string }>
@@ -19,19 +18,43 @@ const EditRequestPage: FC<EditRequestPageProps> = async ({ params }) => {
         return null
     }
 
-    const requestItem = await requestsClient.getRequest(id)
+    const requestItem = (await db.request.findUnique({
+        where: {
+            id,
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    role: true,
+                    name: true,
+                    surname: true,
+                    email: true,
+                },
+            },
+        },
+    })) as RequestWithUser
 
     const handleEdit = async (values: CreateRequestDTO) => {
         'use server'
 
-        await messagesClient.createMessage({
-            date: new Date().toISOString(),
-            message: 'Запрос обновлен',
-            requestId: id,
-            userId: dbUser.id,
+        await db.message.create({
+            data: {
+                message: 'Запрос обновлен',
+                requestId: id,
+                userId: dbUser.id,
+            },
         })
 
-        return requestsClient.updateRequest(id, values)
+        return db.request.update({
+            where: {
+                id,
+            },
+            data: {
+                ...values,
+            },
+        })
     }
 
     return (

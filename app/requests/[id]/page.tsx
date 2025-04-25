@@ -1,12 +1,10 @@
-import { compareDesc } from 'date-fns'
 import { FC } from 'react'
 
 import RequestDetails from '@/components/request-details'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import messagesClient from '@/lib/db-clients/messages.client'
-import requestsClient from '@/lib/db-clients/requests.client'
+import { db } from '@/lib/db'
 import getSessionUser from '@/lib/get-session-user'
-import { MessageWithUserDTO } from '@/types/dtos'
+import { MessageWithUser, RequestWithUser } from '@/types/dtos'
 
 type RequestPageProps = {
     params: {
@@ -25,17 +23,44 @@ const RequestPage: FC<RequestPageProps> = async ({ params }) => {
         return null
     }
 
-    const requestItem = await requestsClient.getRequest(id)
+    const requestItem = (await db.request.findUnique({
+        where: {
+            id,
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    role: true,
+                    name: true,
+                    surname: true,
+                    email: true,
+                },
+            },
+        },
+    })) as RequestWithUser
 
-    const messages: MessageWithUserDTO[] = await messagesClient
-        .getMessagesWithUser({
+    const messages = (await db.message.findMany({
+        where: {
             requestId: id,
-        })
-        .then((messages: MessageWithUserDTO[]) =>
-            messages.sort((a, b) => {
-                return compareDesc(new Date(a.date), new Date(b.date))
-            })
-        )
+        },
+        orderBy: {
+            createdAt: 'asc',
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    role: true,
+                    name: true,
+                    surname: true,
+                    email: true,
+                },
+            },
+        },
+    })) as MessageWithUser[]
 
     return (
         <ScrollArea>

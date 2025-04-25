@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { NextRequest, NextResponse } from 'next/server'
 
-import usersClient from '@/lib/db-clients/users.client'
+import { db } from '@/lib/db'
 
 export async function POST(req: NextRequest) {
     try {
@@ -17,7 +17,11 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        const user = await usersClient.getUserByUsername(username)
+        const user = await db.user.findUnique({
+            where: {
+                username,
+            },
+        })
         if (!user) {
             return NextResponse.json(
                 { message: 'Invalid username' },

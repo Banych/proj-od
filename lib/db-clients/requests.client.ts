@@ -1,66 +1,27 @@
-import messagesClient from '@/lib/db-clients/messages.client'
-import { CreateRequestDTO, MessageDTO, RequestDTO } from '@/types/dtos'
+import axios from 'axios'
 
-const DEFAULT_API_URL = 'http://localhost:8000'
+import { RequestWithUser } from '@/types/dtos'
 
 export default {
-    getRequests: async (
-        params: Record<string, string>
-    ): Promise<RequestDTO[]> => {
-        const query = new URLSearchParams(params).toString()
-        const result = await fetch(DEFAULT_API_URL + '/requests?' + query, {
-            cache: 'no-cache',
+    getPaginatedRequests: async (
+        sortBy: string,
+        sortOrder: 'asc' | 'desc',
+        page: number,
+        limit: number,
+        params: Record<string, string | string[] | undefined>
+    ): Promise<RequestWithUser[]> => {
+        const query = new URLSearchParams({
+            sortBy,
+            sortOrder,
+            page: String(page),
+            limit: String(limit),
         })
-        return result.json()
-    },
-    getRequest: async (id: string): Promise<RequestDTO> => {
-        const result = await fetch(DEFAULT_API_URL + `/requests/${id}`, {
-            cache: 'no-cache',
-        })
-        return result.json()
-    },
-    createRequest: async (request: RequestDTO): Promise<RequestDTO> => {
-        const result = await fetch(DEFAULT_API_URL + '/requests', {
-            method: 'POST',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(request),
-        })
-        return result.json()
-    },
-    deleteRequest: async (id: string): Promise<void> => {
-        const messages: MessageDTO[] = await messagesClient.getMessages({
-            requestId: id,
-        })
-        const promisesToDelete = messages.map((message) =>
-            fetch(DEFAULT_API_URL + `/messages/${message.id}`, {
-                method: 'DELETE',
-                cache: 'no-cache',
-            })
-        )
 
-        await Promise.all([
-            await fetch(DEFAULT_API_URL + `/requests/${id}`, {
-                method: 'DELETE',
-                cache: 'no-cache',
-            }),
-            ...promisesToDelete,
-        ])
-    },
-    updateRequest: async (
-        id: string,
-        request: Partial<CreateRequestDTO>
-    ): Promise<RequestDTO> => {
-        const result = await fetch(DEFAULT_API_URL + `/requests/${id}`, {
-            method: 'PATCH',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(request),
-        })
-        return result.json()
+        if (params.status) {
+            query.append('status', JSON.stringify(params.status))
+        }
+
+        const { data } = await axios.get('/api/requests?' + query)
+        return data
     },
 }

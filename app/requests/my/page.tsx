@@ -1,43 +1,143 @@
 import RequestsList from '@/components/requests-list'
-import messagesClient from '@/lib/db-clients/messages.client'
-import requestsClient from '@/lib/db-clients/requests.client'
+import { db } from '@/lib/db'
+import { RequestStatus, Role } from '@/lib/generated/prisma'
 import getSessionUser from '@/lib/get-session-user'
-import { MessageDTO, RequestDTO } from '@/types/dtos'
+import { RequestWithUser } from '@/types/dtos'
+import { FC } from 'react'
 
-const MyRequests = async () => {
+type MyRequestsProps = {
+    searchParams?: Promise<{
+        sortBy: string
+        sortOrder: 'asc' | 'desc'
+        page: number
+        limit: number
+    }>
+}
+
+const MyRequests: FC<MyRequestsProps> = async ({ searchParams }) => {
     const dbUser = await getSessionUser()
 
     if (!dbUser) {
         return null
     }
 
-    const role = dbUser.role
+    const requests: RequestWithUser[] = []
+    const excludeStatus = RequestStatus.COMPLETED
 
-    const requests: RequestDTO[] = []
+    const params = await searchParams
 
-    if (role === 'Admin' || role === 'Dispatcher') {
-        const messages: MessageDTO[] = await messagesClient.getMessages({
-            userId: dbUser.id,
-        })
+    const sortBy = params?.sortBy || 'orderNumber'
+    const sortOrder = params?.sortOrder || 'desc'
+    const page = params?.page || 1
+    const limit = params?.limit || 10
 
-        const requestIds = messages.map((message) => `id=${message.requestId}`)
+    if (dbUser.role === Role.DISPATCHER) {
+        const requestIds = (
+            await db.message.findMany({
+                where: {
+                    request: {
+                        NOT: {
+                            status: excludeStatus || undefined,
+                        },
+                    },
+                },
+                include: {
+                    request: { select: { id: true } },
+                },
+            })
+        ).map((message) => message.request.id)
 
-        const result = await requestsClient.getRequests({
-            ids: requestIds.join('&'),
-            status_ne: 'completed',
+        const result = await db.request.findMany({
+            where: {
+                OR: [
+                    { id: { in: requestIds } },
+                    { status: { not: RequestStatus.COMPLETED } },
+                ],
+            },
+            orderBy: {
+                [sortBy || 'orderNumber']: sortOrder || 'desc',
+            },
+            take: limit,
+            skip: (page - 1) * limit,
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        role: true,
+                        surname: true,
+                        username: true,
+                    },
+                },
+            },
         })
 
         requests.push(...result)
-    } else {
-        const result = await requestsClient.getRequests({
-            userId: dbUser.id,
-            status_ne: 'completed',
+    } else if (dbUser.role === Role.MANAGER) {
+        const result = await db.request.findMany({
+            where: {
+                userId: dbUser.id,
+                NOT: {
+                    status: excludeStatus || undefined,
+                },
+            },
+            orderBy: {
+                [sortBy || 'orderNumber']: sortOrder || 'desc',
+            },
+            take: limit,
+            skip: (page - 1) * limit,
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        role: true,
+                        surname: true,
+                        username: true,
+                    },
+                },
+            },
+        })
+
+        requests.push(...result)
+    } else if (dbUser.role === Role.ADMIN) {
+        const result = await db.request.findMany({
+            where: {
+                NOT: {
+                    status: excludeStatus || undefined,
+                },
+            },
+            orderBy: {
+                [sortBy || 'orderNumber']: sortOrder || 'desc',
+            },
+            take: limit,
+            skip: (page - 1) * limit,
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        role: true,
+                        surname: true,
+                        username: true,
+                    },
+                },
+            },
         })
 
         requests.push(...result)
     }
 
-    return <RequestsList initialRequests={requests} forceUseInitialRequests />
+    return (
+        <RequestsList
+            initialRequests={requests}
+            user={dbUser}
+            excludeStatus={excludeStatus}
+        />
+    )
 }
 
 export default MyRequests

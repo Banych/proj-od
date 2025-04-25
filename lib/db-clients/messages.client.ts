@@ -1,7 +1,7 @@
 import {
     CreateMessageDTO,
     MessageDTO,
-    MessageWithUserDTO,
+    MessageWithUser,
     UserDTO,
 } from '@/types/dtos'
 
@@ -19,7 +19,7 @@ export default {
     },
     getMessagesWithUser: async (
         params: Record<string, string>
-    ): Promise<MessageWithUserDTO[]> => {
+    ): Promise<MessageWithUser[]> => {
         const query = new URLSearchParams(params).toString()
         const response = await fetch(
             `http://localhost:8000/messages?${query}`,
