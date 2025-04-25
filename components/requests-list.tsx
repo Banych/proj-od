@@ -19,6 +19,7 @@ type RequestsListProps = {
     initialRequests?: RequestWithUser[]
     status?: RequestStatus
     excludeStatus?: RequestStatus
+    id?: string
 }
 
 const RequestsList: FC<RequestsListProps> = ({
@@ -26,6 +27,7 @@ const RequestsList: FC<RequestsListProps> = ({
     initialRequests = [],
     status,
     excludeStatus,
+    id,
 }) => {
     const searchParams = useSearchParams()
     const [sortBy, setSortBy] = useState(
@@ -53,7 +55,7 @@ const RequestsList: FC<RequestsListProps> = ({
           ].filter((s) => s !== excludeStatus)
 
     const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery({
-        queryKey: ['requests', sortBy, sortOrder],
+        queryKey: ['requests', sortBy, sortOrder, id, appliedStatus],
         queryFn: ({ pageParam = 1 }) => {
             return requestsClient.getPaginatedRequests(
                 sortBy,

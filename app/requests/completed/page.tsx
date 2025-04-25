@@ -129,6 +129,7 @@ const CompletedRequestsPage: FC<CompletedRequestsPageProps> = async ({
 
     return (
         <RequestsList
+            id="completed-requests"
             initialRequests={requests}
             user={dbUser}
             status={status}

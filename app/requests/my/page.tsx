@@ -133,6 +133,7 @@ const MyRequests: FC<MyRequestsProps> = async ({ searchParams }) => {
 
     return (
         <RequestsList
+            id="my-requests"
             initialRequests={requests}
             user={dbUser}
             excludeStatus={excludeStatus}
