@@ -31,17 +31,17 @@ export const authOptions: NextAuthOptions = {
                 }
                 const formData = toFormData(data)
                 try {
-                    const res = await fetch(
-                        'http://localhost:3000/api/auth/login',
-                        {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'Content-Type':
-                                    'application/x-www-form-urlencoded',
-                            },
-                        }
+                    const url = new URL(
+                        '/api/auth/login',
+                        process.env.NEXTAUTH_URL
                     )
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    })
 
                     const resData = await res.json()
                     if (res.ok && resData && resData.user) {
