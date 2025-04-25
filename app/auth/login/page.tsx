@@ -2,7 +2,6 @@
 
 import { useCallback, useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 import InputWithLabel from '@/components/ui/input-with-label'
@@ -13,7 +12,6 @@ const LoginPage = () => {
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-    const router = useRouter()
 
     const formSubmitted = useCallback(
         async (event: React.FormEvent) => {
@@ -35,9 +33,9 @@ const LoginPage = () => {
                     const oldUrl = new URL(response.url)
                     const callbackUrl = oldUrl.searchParams.get('callbackUrl')
                     if (callbackUrl) {
-                        router.push(callbackUrl)
+                        window.location.href = callbackUrl
                     } else {
-                        router.push('/')
+                        window.location.href = '/'
                     }
                     setLoading(false)
                 }
@@ -47,7 +45,7 @@ const LoginPage = () => {
                 setLoading(false)
             }
         },
-        [username, password, router]
+        [username, password]
     )
 
     return (
