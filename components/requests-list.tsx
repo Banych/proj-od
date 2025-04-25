@@ -13,6 +13,7 @@ import { ArrowDown, BookCheck, Loader2 } from 'lucide-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { RequestStatus } from '@/generated/prisma-client'
 import TableHeaderCell from '@/components/table-header-cell'
+import useRequestFilters from '@/hooks/use-request-filters'
 
 type RequestsListProps = {
     user: UserDTO
@@ -36,10 +37,10 @@ const RequestsList: FC<RequestsListProps> = ({
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(
         () => (searchParams.get('sortOrder') as 'asc' | 'desc' | null) || 'desc'
     )
-
     const lastRequestRef = useRef<HTMLDivElement | null>(null)
     const { push } = useRouter()
     const pathname = usePathname()
+    const { filters, resetFilters } = useRequestFilters()
 
     const { entry, ref } = useIntersection({
         root: lastRequestRef.current,
@@ -54,31 +55,40 @@ const RequestsList: FC<RequestsListProps> = ({
               RequestStatus.INCORRECT,
           ].filter((s) => s !== excludeStatus)
 
-    const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery({
-        queryKey: ['requests', sortBy, sortOrder, id, appliedStatus],
-        queryFn: ({ pageParam = 1 }) => {
-            return requestsClient.getPaginatedRequests(
+    const { data, isFetching, fetchNextPage, hasNextPage, isLoading } =
+        useInfiniteQuery({
+            queryKey: [
+                'requests',
                 sortBy,
-                sortOrder as 'asc' | 'desc',
-                pageParam,
-                INFINITE_SCROLLING_PAGINATION_RESULTS,
-                {
-                    status: appliedStatus,
+                sortOrder,
+                id,
+                appliedStatus,
+                filters,
+            ],
+            queryFn: ({ pageParam = 1 }) => {
+                return requestsClient.getPaginatedRequests(
+                    sortBy,
+                    sortOrder as 'asc' | 'desc',
+                    pageParam,
+                    INFINITE_SCROLLING_PAGINATION_RESULTS,
+                    {
+                        status: appliedStatus,
+                        ...filters,
+                    }
+                )
+            },
+            getNextPageParam: (lastPage, pages, lastPageParams) => {
+                if (lastPage.length < INFINITE_SCROLLING_PAGINATION_RESULTS) {
+                    return undefined
                 }
-            )
-        },
-        getNextPageParam: (lastPage, pages, lastPageParams) => {
-            if (lastPage.length < INFINITE_SCROLLING_PAGINATION_RESULTS) {
-                return undefined
-            }
-            return lastPageParams + 1
-        },
-        initialPageParam: 1,
-        initialData: {
-            pages: [initialRequests],
-            pageParams: [1],
-        },
-    })
+                return lastPageParams + 1
+            },
+            initialPageParam: 1,
+            initialData: {
+                pages: [initialRequests],
+                pageParams: [1],
+            },
+        })
 
     useEffect(() => {
         if (entry?.isIntersecting && hasNextPage) {
@@ -100,10 +110,20 @@ const RequestsList: FC<RequestsListProps> = ({
         setSortOrder(sortOrder)
     }, [])
 
-    const requests = data?.pages.flatMap((page) => page) ?? initialRequests
+    useEffect(() => {
+        return () => {
+            if (lastRequestRef.current) {
+                lastRequestRef.current = null
+            }
+
+            resetFilters()
+        }
+    }, [])
+
+    const requests = data?.pages.flatMap((page) => page) || []
 
     return (
-        <ScrollArea>
+        <ScrollArea className="grow">
             <div className="grid auto-rows-auto grid-cols-7 gap-2">
                 <TableHeaderCell
                     value="orderNumber"
@@ -157,11 +177,7 @@ const RequestsList: FC<RequestsListProps> = ({
                     Действия
                 </TableHeaderCell>
 
-                {requests.length === 0 && !isFetching ? (
-                    <div className="col-span-7 text-center text-gray-500">
-                        No requests found.
-                    </div>
-                ) : (
+                {!isLoading &&
                     requests.map((request, index) => (
                         <RequestListItem
                             ref={index === requests.length - 1 ? ref : null}
@@ -169,8 +185,7 @@ const RequestsList: FC<RequestsListProps> = ({
                             item={request}
                             user={user}
                         />
-                    ))
-                )}
+                    ))}
                 <li className="col-span-7 flex items-center justify-center gap-x-4 text-sm text-zinc-500">
                     {isFetching ? (
                         <>

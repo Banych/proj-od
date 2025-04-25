@@ -1,17 +1,16 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import RequestsFilter from '@/components/requests-filter'
+import MenuListItem from '@/components/ui/menu-list-item'
 import {
     NavigationMenu,
     NavigationMenuContent,
     NavigationMenuItem,
-    NavigationMenuLink,
     NavigationMenuList,
     NavigationMenuTrigger,
-    navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import UserInfoSmall from '@/components/user-info-small'
-import MenuListItem from '@/components/ui/menu-list-item'
 
 const Header = () => {
     return (
@@ -59,16 +58,10 @@ const Header = () => {
                                     </MenuListItem>
                                 </ul>
                             </NavigationMenuContent>
-                            {/* <Link href="/requests/new" legacyBehavior passHref>
-                                <NavigationMenuLink
-                                    className={navigationMenuTriggerStyle()}
-                                >
-                                    Новый запрос
-                                </NavigationMenuLink>
-                            </Link> */}
                         </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>
+                <RequestsFilter />
             </div>
             <UserInfoSmall />
         </div>

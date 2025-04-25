@@ -1,10 +1,9 @@
 'use client'
 
-import { FC, useCallback, useState } from 'react'
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
+import { FC, useCallback, useState } from 'react'
 
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -12,32 +11,40 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
 
 export type DatePickerProps = {
-    date: Date
+    date: Date | undefined
     onSelect: (date: Date) => void
+    className?: string
 }
 
-export const DatePicker: FC<DatePickerProps> = ({ date, onSelect }) => {
-    const [isOpen, setIsOpen] = useState(false)
+export const DatePicker: FC<DatePickerProps> = ({
+    date,
+    onSelect,
+    className,
+}) => {
+    const [open, setOpen] = useState(false)
+
     const handleDateSelect = useCallback(
         (date: Date | undefined) => {
             if (date && onSelect) {
                 onSelect(date)
+                setOpen(false)
             }
-            setIsOpen(false)
         },
         [onSelect]
     )
 
     return (
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button
                     variant={'outline'}
                     className={cn(
                         'justify-start text-left font-normal',
-                        !date && 'text-muted-foreground'
+                        !date && 'text-muted-foreground',
+                        className
                     )}
                 >
                     <CalendarIcon className="mr-2 size-4" />
@@ -50,6 +57,7 @@ export const DatePicker: FC<DatePickerProps> = ({ date, onSelect }) => {
                     selected={date}
                     onSelect={handleDateSelect}
                     initialFocus
+                    className="pointer-events-auto"
                 />
             </PopoverContent>
         </Popover>

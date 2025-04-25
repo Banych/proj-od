@@ -1,5 +1,6 @@
 'use client'
 
+import FiltersProvider from '@/components/providers/filters-provider'
 import SessionProvider from '@/components/providers/session-provider'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -12,7 +13,7 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
         <SessionProvider>
             <TooltipProvider>
                 <QueryClientProvider client={queryClient}>
-                    {children}
+                    <FiltersProvider>{children}</FiltersProvider>
                 </QueryClientProvider>
             </TooltipProvider>
         </SessionProvider>

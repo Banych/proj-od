@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
+import {
+    RequestStatus,
+    RequestType,
+    Role,
+    SalesOrganizationType,
+} from '@/generated/prisma-client'
 import { db } from '@/lib/db'
 import getSessionUser from '@/lib/get-session-user'
 import { CreateRequestDTO } from '@/types/dtos'
-import { RequestStatus, Role } from '@/generated/prisma-client'
+import { parse, startOfDay, endOfDay } from 'date-fns'
 
 export async function POST(request: NextRequest) {
     const body = (await request.json()) as CreateRequestDTO
@@ -31,7 +37,19 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url)
 
     try {
-        const { sortBy, sortOrder, page, limit, status } = z
+        const {
+            sortBy,
+            sortOrder,
+            page,
+            limit,
+            status,
+            orderNumber,
+            dateFrom,
+            dateTo,
+            type,
+            salesOrganization,
+            warehouse,
+        } = z
             .object({
                 sortBy: z.string().optional(),
                 sortOrder: z.enum(['asc', 'desc']).optional(),
@@ -47,6 +65,28 @@ export async function GET(request: NextRequest) {
                     )
                     .optional()
                     .nullable(),
+                orderNumber: z.string().nullable(),
+                dateFrom: z.string().nullable(),
+                dateTo: z.string().nullable(),
+                type: z
+                    .enum([
+                        RequestType.CORRECTION_RETURN,
+                        RequestType.CORRECTION_SALE,
+                        RequestType.ONE_DAY_DELIVERY,
+                        RequestType.SAMPLING,
+                    ])
+                    .nullable(),
+                salesOrganization: z
+                    .enum([
+                        SalesOrganizationType.SALES_3801,
+                        SalesOrganizationType.SALES_3802,
+                        SalesOrganizationType.SALES_3803,
+                        SalesOrganizationType.SALES_3804,
+                        SalesOrganizationType.SALES_3805,
+                        SalesOrganizationType.SALES_3806,
+                    ])
+                    .nullable(),
+                warehouse: z.string().nullable(),
             })
             .parse({
                 sortBy: url.searchParams.get('sortBy'),
@@ -54,6 +94,12 @@ export async function GET(request: NextRequest) {
                 page: url.searchParams.get('page'),
                 limit: url.searchParams.get('limit'),
                 status: JSON.parse(url.searchParams.get('status') ?? '[]'),
+                orderNumber: url.searchParams.get('orderNumber'),
+                dateFrom: url.searchParams.get('dateFrom'),
+                dateTo: url.searchParams.get('dateTo'),
+                type: url.searchParams.get('type'),
+                salesOrganization: url.searchParams.get('salesOrganization'),
+                warehouse: url.searchParams.get('warehouse'),
             })
 
         const user = await getSessionUser()
@@ -100,6 +146,43 @@ export async function GET(request: NextRequest) {
 
         if (status) {
             whereClause = { ...whereClause, status: { in: status } }
+        }
+
+        if (orderNumber) {
+            whereClause = { ...whereClause, orderNumber }
+        }
+
+        if (dateFrom) {
+            whereClause = {
+                ...whereClause,
+                date: {
+                    gte: startOfDay(parse(dateFrom, 'yyyy-MM-dd', new Date())),
+                },
+            }
+        }
+
+        if (dateTo) {
+            whereClause = {
+                ...whereClause,
+                date: {
+                    lte: endOfDay(parse(dateTo, 'yyyy-MM-dd', new Date())),
+                },
+            }
+        }
+
+        if (type) {
+            whereClause = { ...whereClause, type }
+        }
+
+        if (salesOrganization) {
+            whereClause = {
+                ...whereClause,
+                salesOrganization,
+            }
+        }
+
+        if (warehouse) {
+            whereClause = { ...whereClause, warehouse }
         }
 
         const requests = await db.request.findMany({
