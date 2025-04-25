@@ -12,7 +12,7 @@ type RequestPageProps = {
     }
 }
 
-export const cache = 'force-no-store'
+// export const cache = 'force-no-store'
 
 const RequestPage: FC<RequestPageProps> = async ({ params }) => {
     const { id } = params
