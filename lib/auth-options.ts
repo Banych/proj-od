@@ -32,7 +32,8 @@ export const authOptions: NextAuthOptions = {
                 const formData = toFormData(data)
                 try {
                     const res = await fetch(
-                        (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) +
+                        (process.env.NEXTAUTH_URL ??
+                            `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) +
                             '/api/auth/login',
                         {
                             method: 'POST',
