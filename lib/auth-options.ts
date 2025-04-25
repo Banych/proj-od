@@ -21,11 +21,6 @@ export const authOptions: NextAuthOptions = {
                 password: { label: 'Password', type: 'password' },
             },
             async authorize(credentials) {
-                if (!process.env.NEXTAUTH_URL) {
-                    console.error('NEXTAUTH_URL is not defined')
-                    return null
-                }
-
                 if (!credentials) {
                     console.error('No credentials provided')
                     return null
@@ -40,19 +35,17 @@ export const authOptions: NextAuthOptions = {
                         throw new Error('NEXTAUTH_URL is not defined')
                     }
 
-                    const url = new URL(
-                        '/api/auth/login',
-                        process.env.NEXTAUTH_URL
+                    const res = await fetch(
+                        process.env.NEXTAUTH_URL + '/api/auth/login',
+                        {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Content-Type':
+                                    'application/x-www-form-urlencoded',
+                            },
+                        }
                     )
-                    console.log('URL:', url.toString())
-
-                    const res = await fetch(url.toString(), {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    })
 
                     const resData = await res.json()
                     if (res.ok && resData && resData.user) {
