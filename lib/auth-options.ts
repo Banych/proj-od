@@ -44,7 +44,9 @@ export const authOptions: NextAuthOptions = {
                         '/api/auth/login',
                         process.env.NEXTAUTH_URL
                     )
-                    const res = await fetch(url, {
+                    console.log('URL:', url.toString())
+
+                    const res = await fetch(url.toString(), {
                         method: 'POST',
                         body: formData,
                         headers: {
