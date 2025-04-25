@@ -31,12 +31,9 @@ export const authOptions: NextAuthOptions = {
                 }
                 const formData = toFormData(data)
                 try {
-                    if (!process.env.NEXTAUTH_URL) {
-                        throw new Error('NEXTAUTH_URL is not defined')
-                    }
-
                     const res = await fetch(
-                        process.env.NEXTAUTH_URL + '/api/auth/login',
+                        (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) +
+                            '/api/auth/login',
                         {
                             method: 'POST',
                             body: formData,
