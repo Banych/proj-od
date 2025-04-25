@@ -21,6 +21,11 @@ export const authOptions: NextAuthOptions = {
                 password: { label: 'Password', type: 'password' },
             },
             async authorize(credentials) {
+                if (!process.env.NEXTAUTH_URL) {
+                    console.error('NEXTAUTH_URL is not defined')
+                    return null
+                }
+
                 if (!credentials) {
                     console.error('No credentials provided')
                     return null
