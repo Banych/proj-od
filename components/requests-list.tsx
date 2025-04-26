@@ -92,7 +92,6 @@ const RequestsList: FC<RequestsListProps> = ({
 
     useEffect(() => {
         if (entry?.isIntersecting && hasNextPage) {
-            console.log('Fetching next page...')
             fetchNextPage()
         }
     }, [entry, fetchNextPage, hasNextPage])
