@@ -1,11 +1,14 @@
 'use client'
 
+import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { FC, useCallback, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import InputWithLabel from '@/components/ui/input-with-label'
+import { useToast } from '@/hooks/use-toast'
 import { UserDTO } from '@/types/dtos'
+import { useMutation } from '@tanstack/react-query'
 
 type ProfileFormProps = {
     user: UserDTO
@@ -16,9 +19,9 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }) => {
     const [surname, setSurname] = useState(user.surname)
     const [username, setUsername] = useState(user.username)
     const [email, setEmail] = useState(user.email)
-    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const { refresh } = useRouter()
+    const { toast } = useToast()
 
     const handleNameChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,38 +51,45 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }) => {
         []
     )
 
+    const { mutate: updateProfile, isPending: isUpdateProfilePending } =
+        useMutation({
+            mutationKey: ['updateProfile'],
+            mutationFn: async () => {
+                return axios.put('/api/profile/' + user.id, {
+                    name,
+                    surname,
+                    username,
+                    email,
+                })
+            },
+            onSuccess: () => {
+                refresh()
+            },
+            onError: (error) => {
+                toast({
+                    variant: 'destructive',
+                    title: 'Ошибка обновления профиля',
+                    description: (error as Error).message,
+                })
+            },
+        })
+
     const handleSubmit = useCallback(
         async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault()
 
-            setIsSubmitting(true)
-
-            try {
-                const response = await fetch('/api/profile/' + user.id, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        name,
-                        surname,
-                        username,
-                        email,
-                    }),
+            if (!name || !surname || !username || !email) {
+                toast({
+                    variant: 'destructive',
+                    title: 'Ошибка',
+                    description: 'Заполните все поля',
                 })
-
-                if (!response.ok) {
-                    throw new Error('Failed to update user')
-                }
-
-                refresh()
-            } catch (error: unknown) {
-                console.error(error)
-            } finally {
-                setIsSubmitting(false)
+                return
             }
+
+            updateProfile()
         },
-        [email, name, refresh, surname, user.id, username]
+        [email, name, surname, toast, updateProfile, username]
     )
 
     return (
@@ -105,7 +115,7 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }) => {
                 type="email"
                 onChange={handleEmailChange}
             />
-            <Button type="submit" loading={isSubmitting}>
+            <Button type="submit" loading={isUpdateProfilePending}>
                 Сохранить
             </Button>
         </form>

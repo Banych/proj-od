@@ -1,8 +1,11 @@
 'use client'
 
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
 import { Trash, TriangleAlert } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { forwardRef, Fragment, useCallback, useMemo } from 'react'
+import { format } from 'date-fns'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -11,9 +14,9 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { RequestStatus, Role } from '@/generated/prisma-client'
+import { useToast } from '@/hooks/use-toast'
 import { getSalesOrganizationName, getTypeName } from '@/lib/utils'
 import { RequestWithUser, UserDTO } from '@/types/dtos'
-import { format } from 'date-fns'
 
 type RequestItemProps = {
     item: RequestWithUser
@@ -22,17 +25,41 @@ type RequestItemProps = {
 
 const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
     ({ item, user }, ref) => {
-        const { push } = useRouter()
+        const { push, refresh } = useRouter()
+        const { toast } = useToast()
+        const queryClient = useQueryClient()
 
         const isDeleteAllowed = useMemo(() => {
             return user.role === Role.ADMIN || user.id === item.userId
         }, [item.userId, user.id, user.role])
 
-        const handleDelete = useCallback(() => {
-            fetch(`http://localhost:3000/api/requests/${item.id}`, {
-                method: 'DELETE',
+        const { mutate: deleteRequest, isPending: isDeleteRequesstPending } =
+            useMutation({
+                mutationKey: ['delete-request', item.id],
+                mutationFn: async () => {
+                    return axios.delete(`/api/requests/${item.id}`)
+                },
+                onSuccess: () => {
+                    refresh()
+                    queryClient.invalidateQueries({ queryKey: ['requests'] })
+                    toast({
+                        title: 'Успех',
+                        description: 'Запрос удален',
+                        variant: 'default',
+                    })
+                },
+                onError: () => {
+                    toast({
+                        title: 'Ошибка',
+                        description: 'Не удалось удалить запрос',
+                        variant: 'destructive',
+                    })
+                },
             })
-        }, [item.id])
+
+        const handleDelete = useCallback(() => {
+            deleteRequest()
+        }, [deleteRequest])
 
         const handleOpen = useCallback(() => {
             push(`/requests/${item.id}`)
@@ -63,14 +90,18 @@ const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
                 <div className="flex items-center">{item.warehouse}</div>
                 <div className="flex items-center">{item.resource}</div>
                 <div className="flex items-center gap-2">
-                    <Button variant="secondary" onClick={handleOpen}>
+                    <Button
+                        variant="secondary"
+                        onClick={handleOpen}
+                        disabled={isDeleteRequesstPending}
+                    >
                         Open
                     </Button>
                     <Button
                         variant="destructive"
                         size="icon"
                         onClick={handleDelete}
-                        disabled={!isDeleteAllowed}
+                        loading={!isDeleteAllowed || isDeleteRequesstPending}
                     >
                         <Trash className="size-6" />
                     </Button>

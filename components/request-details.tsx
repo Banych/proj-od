@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import { TriangleAlert } from 'lucide-react'
 import { FC } from 'react'
 
@@ -11,7 +12,6 @@ import {
 import { RequestStatus } from '@/generated/prisma-client'
 import { getSalesOrganizationName, getTypeName } from '@/lib/utils'
 import { MessageWithUser, RequestWithUser, UserDTO } from '@/types/dtos'
-import { format } from 'date-fns'
 
 type RequestDetailsProps = {
     item: RequestWithUser

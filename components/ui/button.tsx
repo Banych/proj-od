@@ -51,6 +51,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             asChild = false,
             loading,
             children,
+            disabled,
             ...props
         },
         ref
@@ -60,11 +61,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <Comp
                 className={cn(buttonVariants({ variant, size, className }))}
                 ref={ref}
+                disabled={loading || disabled}
                 {...props}
             >
                 <>
                     {loading && <Loader className="size-4 animate-spin" />}
-                    {children}
+                    {loading && size === 'icon' ? null : children}
                 </>
             </Comp>
         )

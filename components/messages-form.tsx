@@ -1,5 +1,7 @@
 'use client'
 
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { FC, useCallback, useMemo, useState } from 'react'
@@ -7,9 +9,9 @@ import { FC, useCallback, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import InputWithLabel from '@/components/ui/input-with-label'
 import { Textarea } from '@/components/ui/textarea'
+import { Role } from '@/generated/prisma-client'
 import { useToast } from '@/hooks/use-toast'
 import { UserDTO } from '@/types/dtos'
-import { Role } from '@/generated/prisma-client'
 
 type MessagesFormProps = {
     requestId: string
@@ -28,6 +30,36 @@ const MessagesForm: FC<MessagesFormProps> = ({ requestId, user }) => {
         () => user.role === Role.DISPATCHER || user.role === Role.ADMIN,
         [user.role]
     )
+
+    const { mutate: postMessage, isPending: isPostMessagePending } =
+        useMutation({
+            mutationKey: ['send-message', requestId, user.id],
+            mutationFn: async () => {
+                return axios.post('/api/messages', {
+                    message,
+                    requestId,
+                    userId: data?.user?.id,
+                    needCorrection,
+                })
+            },
+            onSuccess: () => {
+                refresh()
+                setMessage('')
+                setNeedCorrection(false)
+                toast({
+                    title: 'Успех',
+                    description: 'Сообщение отправлено',
+                    variant: 'default',
+                })
+            },
+            onError: () => {
+                toast({
+                    title: 'Ошибка',
+                    description: 'Не удалось отправить сообщение',
+                    variant: 'destructive',
+                })
+            },
+        })
 
     const handleSubmit = useCallback(
         async (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,37 +83,9 @@ const MessagesForm: FC<MessagesFormProps> = ({ requestId, user }) => {
                 return
             }
 
-            const result = await fetch('http://localhost:3000/api/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    message,
-                    requestId,
-                    userId: data?.user?.id,
-                    needCorrection,
-                }),
-            })
-
-            if (result.ok) {
-                refresh()
-                setMessage('')
-                setNeedCorrection(false)
-                toast({
-                    title: 'Успех',
-                    description: 'Сообщение отправлено',
-                    variant: 'default',
-                })
-            } else {
-                toast({
-                    title: 'Ошибка',
-                    description: 'Не удалось отправить сообщение',
-                    variant: 'destructive',
-                })
-            }
+            postMessage()
         },
-        [data?.user?.id, message, needCorrection, refresh, requestId, toast]
+        [data?.user?.id, message, postMessage, toast]
     )
 
     return (
@@ -91,6 +95,7 @@ const MessagesForm: FC<MessagesFormProps> = ({ requestId, user }) => {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Введите сообщение"
                 className="max-h-36"
+                disabled={isPostMessagePending}
             />
             <div className="flex items-center gap-4">
                 {isNeedCorrectionVisible && (
@@ -99,10 +104,16 @@ const MessagesForm: FC<MessagesFormProps> = ({ requestId, user }) => {
                         type="checkbox"
                         orientation="horizontal"
                         checked={needCorrection}
+                        disabled={isPostMessagePending}
                         onChange={() => setNeedCorrection(!needCorrection)}
                     />
                 )}
-                <Button type="submit" size="sm" className="grow">
+                <Button
+                    type="submit"
+                    size="sm"
+                    className="grow"
+                    loading={isPostMessagePending}
+                >
                     Отправить
                 </Button>
             </div>

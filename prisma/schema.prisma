@@ -36,8 +36,8 @@ model Request {
   resource          String
   userId            String
   orderNumber       Int                   @unique @default(autoincrement())
-  Message           Message[]
-  user              User                  @relation(fields: [userId], references: [id])
+  Message           Message[]             @relation("RequestMessages")
+  user              User                  @relation(fields: [userId], references: [id], onDelete: Restrict)
 }
 
 model Message {
@@ -47,8 +47,8 @@ model Message {
   message   String
   requestId String
   userId    String
-  request   Request  @relation(fields: [requestId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  request   Request  @relation("RequestMessages", fields: [requestId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
 }
 
 enum RequestType {

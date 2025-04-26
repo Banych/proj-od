@@ -1,5 +1,7 @@
 'use client'
 
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import { ClassValue } from 'clsx'
 import { useRouter } from 'next/navigation'
 import { FC, useCallback, useMemo, useState } from 'react'
@@ -17,12 +19,12 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import defaultRequestTypes from '@/constants/default-request-types'
 import salesOrganizations from '@/constants/default-sales-organizations'
-import { useToast } from '@/hooks/use-toast'
 import {
     Request,
     RequestType,
     SalesOrganizationType,
 } from '@/generated/prisma-client'
+import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { CreateRequestDTO } from '@/types/dtos'
 
@@ -58,6 +60,45 @@ const RequestForm: FC<RequestFormProps> = ({
 
     const { toast } = useToast()
     const { push } = useRouter()
+
+    const { mutate, isPending } = useMutation({
+        mutationKey: ['createRequest'],
+        mutationFn: async (value: CreateRequestDTO) => {
+            if (onFormSubmit) {
+                return onFormSubmit(value)
+            }
+
+            const { data } = await axios.post<Request>('/api/requests', value, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            return data
+        },
+        onSuccess: async (response) => {
+            if (response) {
+                toast({
+                    variant: 'default',
+                    title: 'Запрос успешно отправлен',
+                })
+                const id = response.id
+
+                push(`/requests/${id}`)
+            } else {
+                toast({
+                    variant: 'destructive',
+                    title: 'Ошибка отправки запроса',
+                })
+            }
+        },
+        onError: () => {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка отправки запроса',
+            })
+        },
+    })
 
     const isResourceShown = useMemo(
         () => requestType === RequestType.ONE_DAY_DELIVERY,
@@ -109,40 +150,12 @@ const RequestForm: FC<RequestFormProps> = ({
                 resource,
             }
 
-            const response = onFormSubmit
-                ? await onFormSubmit({ ...data })
-                : await fetch('/api/requests', {
-                      method: 'POST',
-                      cache: 'no-cache',
-                      headers: {
-                          'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify(data),
-                  })
-
-            if (response) {
-                toast({
-                    variant: 'default',
-                    title: 'Запрос успешно отправлен',
-                })
-                const id =
-                    'json' in response
-                        ? (await response.json()).id
-                        : response.id
-
-                push(`/requests/${id}`)
-            } else {
-                toast({
-                    variant: 'destructive',
-                    title: 'Ошибка отправки запроса',
-                })
-            }
+            mutate(data)
         },
         [
             comment,
             date,
-            onFormSubmit,
-            push,
+            mutate,
             requestType,
             resource,
             salesOrganization,
@@ -192,6 +205,7 @@ const RequestForm: FC<RequestFormProps> = ({
                 <Select
                     value={requestType}
                     onValueChange={handleRequestTypeChange}
+                    disabled={isPending}
                 >
                     <SelectTrigger>
                         <SelectValue placeholder="Выберите тип" />
@@ -207,6 +221,7 @@ const RequestForm: FC<RequestFormProps> = ({
                 <Select
                     value={salesOrganization}
                     onValueChange={handleSalesOrganizationChange}
+                    disabled={isPending}
                 >
                     <SelectTrigger>
                         <SelectValue placeholder="Выберите организацию" />
@@ -226,6 +241,7 @@ const RequestForm: FC<RequestFormProps> = ({
                     value={warehouse}
                     onChange={handleWarehouseChange}
                     placeholder="Введите номер склад"
+                    disabled={isPending}
                 />
                 <DatePicker date={date} onSelect={setDate} />
             </div>
@@ -235,6 +251,7 @@ const RequestForm: FC<RequestFormProps> = ({
                     value={comment}
                     onChange={handleCommentChange}
                     className="h-full max-h-48"
+                    disabled={isPending}
                 />
                 {isResourceShown && (
                     <Input
@@ -242,11 +259,14 @@ const RequestForm: FC<RequestFormProps> = ({
                         className="w-[200px]"
                         onChange={handleResourceChange}
                         placeholder="Введите ресурс"
+                        disabled={isPending}
                     />
                 )}
             </div>
             <div className="flex justify-end">
-                <Button type="submit">{submitButtonText}</Button>
+                <Button type="submit" loading={isPending}>
+                    {submitButtonText}
+                </Button>
             </div>
         </form>
     )
