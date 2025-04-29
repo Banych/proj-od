@@ -2,11 +2,11 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import { format } from 'date-fns'
 import { Trash, TriangleAlert } from 'lucide-react'
 import { useRouter } from 'nextjs-toploader/app'
 import { forwardRef, Fragment, useCallback, useMemo } from 'react'
 
+import FormattedDate from '@/components/formatted-date'
 import { Button } from '@/components/ui/button'
 import {
     Tooltip,
@@ -79,7 +79,7 @@ const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
                     )}
                 </div>
                 <div className="flex items-center">
-                    {format(item.date, 'dd.MM.yyyy')}
+                    <FormattedDate date={item.date} formatString="dd.MM.yyyy" />
                 </div>
                 <div className="flex items-center">
                     {getTypeName(item.type)}

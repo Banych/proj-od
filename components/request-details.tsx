@@ -1,7 +1,7 @@
-import { format } from 'date-fns'
 import { TriangleAlert } from 'lucide-react'
 import { FC } from 'react'
 
+import FormattedDate from '@/components/formatted-date'
 import Messages from '@/components/messages'
 import RequestActions from '@/components/request-actions'
 import {
@@ -64,7 +64,12 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
                 </div>
                 <div className="flex flex-col gap-2">
                     <div className="font-bold">Дата:</div>
-                    <div>{format(item.date, 'dd.MM.yyyy')}</div>
+                    <div>
+                        <FormattedDate
+                            date={item.date}
+                            formatString="dd.MM.yyyy"
+                        />
+                    </div>
                 </div>
             </div>
 

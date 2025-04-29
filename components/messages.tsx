@@ -4,6 +4,7 @@ import { ru } from 'date-fns/locale'
 import Link from 'next/link'
 import { FC } from 'react'
 
+import FormattedDate from '@/components/formatted-date'
 import MessagesForm from '@/components/messages-form'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -50,7 +51,7 @@ const Messages: FC<MessagesProps> = async ({ messages, requestId }) => {
                                 </Link>
                             </Button>
                             <span className="text-xs text-muted-foreground">
-                                {formatDate(message.createdAt)}
+                                <FormattedDate date={message.createdAt} />
                             </span>
                         </CardHeader>
                         <CardContent className="px-4 text-lg">

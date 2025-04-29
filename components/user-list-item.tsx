@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { format } from 'date-fns'
+import { Trash } from 'lucide-react'
 import { forwardRef } from 'react'
 
+import FormattedDate from '@/components/formatted-date'
 import { Button } from '@/components/ui/button'
 import {
     Select,
@@ -15,7 +16,6 @@ import { defaultRoles } from '@/constants/default-roles'
 import { Role } from '@/generated/prisma-client'
 import { useToast } from '@/hooks/use-toast'
 import { UserDTO } from '@/types/dtos'
-import { Trash } from 'lucide-react'
 
 type UserListItemProps = {
     user: UserDTO & {
@@ -101,7 +101,10 @@ const UserListItem = forwardRef<HTMLDivElement, UserListItemProps>(
                     </SelectContent>
                 </Select>
                 <div className="flex items-center gap-2">
-                    {format(user.createdAt, 'dd.MM.yyyy HH:mm')}
+                    <FormattedDate
+                        date={user.createdAt}
+                        formatString="dd.MM.yyyy HH:mm"
+                    />
                 </div>
                 <div className="flex items-center justify-end gap-2">
                     <Button
