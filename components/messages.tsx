@@ -34,7 +34,7 @@ const Messages: FC<MessagesProps> = async ({ messages, requestId }) => {
                                 size="lg"
                                 className="text-xl"
                             >
-                                <Link href={`/users/${message.user.id}`}>
+                                <Link href={`/users/${message.user.username}`}>
                                     @
                                     {message.user.name && message.user.surname
                                         ? `${message.user.name} ${message.user.surname}`

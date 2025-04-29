@@ -1,19 +1,20 @@
+import { notFound } from 'next/navigation'
 import { FC } from 'react'
 
 import { Label } from '@/components/ui/label'
 import { db } from '@/lib/db'
-import { notFound } from 'next/navigation'
+import { getRoleName } from '@/lib/utils'
 
 type UserDetailsPageProps = {
-    params: Promise<{ id: string }>
+    params: Promise<{ username: string }>
 }
 
 const UserDetailsPage: FC<UserDetailsPageProps> = async ({ params }) => {
-    const { id } = await params
+    const { username } = await params
 
     const user = await db.user.findUnique({
         where: {
-            id,
+            username,
         },
         select: {
             id: true,
@@ -47,7 +48,7 @@ const UserDetailsPage: FC<UserDetailsPageProps> = async ({ params }) => {
             </div>
             <div className="flex flex-col gap-2">
                 <Label>Роль</Label>
-                <span>{user.role}</span>
+                <span>{getRoleName(user.role)}</span>
             </div>
         </div>
     )
