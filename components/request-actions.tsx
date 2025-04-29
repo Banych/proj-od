@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 import { FC } from 'react'
 
 import { Button, buttonVariants } from '@/components/ui/button'

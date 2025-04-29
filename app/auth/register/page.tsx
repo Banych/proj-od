@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 import { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -20,17 +20,16 @@ const RegisterPage = () => {
     const { push } = useRouter()
     const { toast } = useToast()
 
-    const { control, handleSubmit, ...form } =
-        useForm<RegisterFormValidatorType>({
-            defaultValues: {
-                username: '',
-                password: '',
-                confirmPassword: '',
-            },
-            mode: 'onBlur',
-            reValidateMode: 'onChange',
-            resolver: zodResolver(registerFormValidator),
-        })
+    const { control, handleSubmit } = useForm<RegisterFormValidatorType>({
+        defaultValues: {
+            username: '',
+            password: '',
+            confirmPassword: '',
+        },
+        mode: 'onBlur',
+        reValidateMode: 'onChange',
+        resolver: zodResolver(registerFormValidator),
+    })
 
     const { mutate: register, isPending: isRegisterPending } = useMutation({
         mutationKey: ['register'],

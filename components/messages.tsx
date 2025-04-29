@@ -42,10 +42,7 @@ const Messages: FC<MessagesProps> = async ({ messages, requestId }) => {
                                 </Link>
                             </Button>
                             <span className="text-xs text-muted-foreground">
-                                {format(
-                                    new Date(message.createdAt),
-                                    'dd.MM.yyyy HH:mm'
-                                )}
+                                {format(message.createdAt, 'dd.MM.yyyy HH:mm')}
                             </span>
                         </CardHeader>
                         <CardContent className="px-4 text-lg">

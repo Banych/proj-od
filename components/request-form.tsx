@@ -3,7 +3,7 @@
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { ClassValue } from 'clsx'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 import { FC, useCallback, useMemo, useState } from 'react'
 
 import { Button } from '@/components/ui/button'

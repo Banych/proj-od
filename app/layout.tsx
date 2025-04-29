@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
+import NextTopLoader from 'nextjs-toploader'
 
 import Header from '@/components/header'
 import Providers from '@/components/providers/providers'
@@ -32,6 +33,7 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
+                <NextTopLoader showSpinner={false} />
                 <Providers>
                     <div className="container m-auto flex h-screen flex-col gap-2 p-4">
                         <Header />

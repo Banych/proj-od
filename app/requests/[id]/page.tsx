@@ -46,7 +46,7 @@ const RequestPage: FC<RequestPageProps> = async ({ params }) => {
             requestId: id,
         },
         orderBy: {
-            createdAt: 'asc',
+            createdAt: 'desc',
         },
         include: {
             user: {

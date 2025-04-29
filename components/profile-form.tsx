@@ -1,7 +1,7 @@
 'use client'
 
 import axios from 'axios'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 import { FC, useCallback, useState } from 'react'
 
 import { Button } from '@/components/ui/button'

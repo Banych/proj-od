@@ -1,23 +1,21 @@
 'use client'
 
-import { useCallback, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
+import { useCallback } from 'react'
 
-import InputWithLabel from '@/components/ui/input-with-label'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import InputWithLabel from '@/components/ui/input-with-label'
 import { useToast } from '@/hooks/use-toast'
-import { Controller, useForm } from 'react-hook-form'
 import {
     loginFormValidator,
     LoginFormValidatorType,
 } from '@/lib/validators/login-form.validator'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { Controller, useForm } from 'react-hook-form'
 
 const LoginPage = () => {
-    const { push } = useRouter()
     const { toast } = useToast()
 
     const { control, handleSubmit } = useForm<LoginFormValidatorType>({

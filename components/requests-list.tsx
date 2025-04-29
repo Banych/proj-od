@@ -2,18 +2,19 @@
 
 import { useIntersection } from '@mantine/hooks'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { ArrowDown, BookCheck, Loader2 } from 'lucide-react'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 
 import RequestListItem from '@/components/request-list-item'
+import TableHeaderCell from '@/components/table-header-cell'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { INFINITE_SCROLLING_PAGINATION_RESULTS } from '@/constants/lists-constants'
+import { RequestStatus } from '@/generated/prisma-client'
+import useRequestFilters from '@/hooks/use-request-filters'
 import requestsClient from '@/lib/db-clients/requests.client'
 import { RequestWithUser, UserDTO } from '@/types/dtos'
-import { ArrowDown, BookCheck, Loader2 } from 'lucide-react'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { RequestStatus } from '@/generated/prisma-client'
-import TableHeaderCell from '@/components/table-header-cell'
-import useRequestFilters from '@/hooks/use-request-filters'
 
 type RequestsListProps = {
     user: UserDTO
