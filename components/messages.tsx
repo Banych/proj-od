@@ -23,12 +23,6 @@ const Messages: FC<MessagesProps> = async ({ messages, requestId }) => {
         return null
     }
 
-    const formatDate = (date: Date) => {
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        const timezonedDate = toZonedTime(date.toISOString(), timezone)
-        return format(timezonedDate, 'dd.MM.yyyy HH:mm', { locale: ru })
-    }
-
     return (
         <div className="flex flex-col gap-4">
             <h3 className="text-2xl font-semibold">Сообщения</h3>
