@@ -15,7 +15,7 @@ const FormattedDate: FC<FormattedDateProps> = ({
     formatString = 'dd.MM.yyyy HH:mm',
 }) => {
     const { timezone } = useTimezone()
-    const timezonedDate = toZonedTime(date.toISOString(), timezone)
+    const timezonedDate = toZonedTime(date, timezone)
     const formattedDate = format(timezonedDate, formatString)
     return formattedDate
 }
