@@ -20,7 +20,7 @@ const Header = () => {
                     <h1>
                         <Image
                             src="/logo.png"
-                            alt="Мултон Патнерс"
+                            alt="Мултон Партнерс"
                             className="size-auto"
                             width={200}
                             height={80}

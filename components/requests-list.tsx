@@ -138,7 +138,7 @@ const RequestsList: FC<RequestsListProps> = ({
                     sortBy={sortBy}
                     sortOrder={sortOrder}
                 >
-                    Date
+                    Дата
                 </TableHeaderCell>
                 <TableHeaderCell
                     value="type"
@@ -172,9 +172,7 @@ const RequestsList: FC<RequestsListProps> = ({
                 >
                     Ресурс
                 </TableHeaderCell>
-                <TableHeaderCell value="actions" className="font-bold">
-                    Действия
-                </TableHeaderCell>
+                <TableHeaderCell value="actions" className="font-bold" />
 
                 {!isLoading &&
                     requests.map((request, index) => (

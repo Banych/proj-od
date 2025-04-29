@@ -1,81 +1,154 @@
 'use client'
 
-import { useCallback, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useCallback } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
+import { Button, buttonVariants } from '@/components/ui/button'
 import InputWithLabel from '@/components/ui/input-with-label'
-import { Button } from '@/components/ui/button'
+import { useToast } from '@/hooks/use-toast'
+import {
+    registerFormValidator,
+    RegisterFormValidatorType,
+} from '@/lib/validators/register-form.validator'
 
 const RegisterPage = () => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
-    const [success, setSuccess] = useState('')
-    const router = useRouter()
+    const { push } = useRouter()
+    const { toast } = useToast()
+
+    const { control, handleSubmit, ...form } =
+        useForm<RegisterFormValidatorType>({
+            defaultValues: {
+                username: '',
+                password: '',
+                confirmPassword: '',
+            },
+            mode: 'onBlur',
+            reValidateMode: 'onChange',
+            resolver: zodResolver(registerFormValidator),
+        })
+
+    const { mutate: register, isPending: isRegisterPending } = useMutation({
+        mutationKey: ['register'],
+        mutationFn: async (value: RegisterFormValidatorType) => {
+            const { data } = await axios.post('/api/auth/register', {
+                username: value.username,
+                password: value.password,
+            })
+
+            return data
+        },
+        onSuccess: () => {
+            toast({
+                title: 'Успех',
+                description: 'Пользователь успешно зарегистрирован',
+                variant: 'default',
+            })
+            push('/auth/login')
+        },
+        onError: (error) => {
+            if (process.env.NODE_ENV === 'development') {
+                console.error('Registration error:', error)
+            }
+            toast({
+                title: 'Ошибка',
+                description: error.message,
+                variant: 'destructive',
+            })
+        },
+    })
 
     const formSubmitted = useCallback(
-        async (event: React.FormEvent) => {
-            event.preventDefault()
-            setLoading(true)
-
-            try {
-                const response = await fetch('/api/auth/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, password }),
-                })
-
-                const data = await response.json()
-
-                if (!response.ok) {
-                    setError(data.message || 'An unexpected error occurred')
-                    setLoading(false)
-                } else {
-                    setSuccess('User registered successfully')
-                    setLoading(false)
-                    router.push('/auth/login')
-                }
-            } catch (error: unknown) {
-                console.error('Registration error:', error)
-                setError('An unexpected error occurred')
-                setLoading(false)
-            }
+        (value: RegisterFormValidatorType) => {
+            register(value)
         },
-        [username, password, router]
+        [register]
     )
 
     return (
         <div className="flex grow items-center justify-center">
             <div className="flex min-w-[300px] flex-col rounded bg-white p-4 shadow-md">
                 <h1 className="mb-3 text-2xl font-bold">Регистрация</h1>
-                <form className="flex flex-col gap-3" onSubmit={formSubmitted}>
-                    <InputWithLabel
-                        label="Имя пользователя"
-                        id="username"
-                        type="text"
-                        value={username}
-                        onChange={(event) => setUsername(event.target.value)}
-                        required
+                <form
+                    className="flex flex-col gap-3"
+                    onSubmit={handleSubmit(formSubmitted)}
+                >
+                    <Controller
+                        name="username"
+                        control={control}
+                        disabled={isRegisterPending}
+                        render={({
+                            field: { onChange, ...field },
+                            fieldState: { invalid, error },
+                        }) => (
+                            <InputWithLabel
+                                label="Логин"
+                                id="username"
+                                type="text"
+                                invalid={invalid}
+                                error={error?.message}
+                                onChange={(event) => {
+                                    onChange(event.target.value)
+                                }}
+                                {...field}
+                            />
+                        )}
                     />
-                    <InputWithLabel
-                        label="Пароль"
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        required
+                    <Controller
+                        name="password"
+                        control={control}
+                        disabled={isRegisterPending}
+                        render={({
+                            field: { onChange, ...field },
+                            fieldState: { invalid, error },
+                        }) => (
+                            <InputWithLabel
+                                label="Пароль"
+                                id="password"
+                                type="password"
+                                invalid={invalid}
+                                error={error?.message}
+                                onChange={(event) => {
+                                    onChange(event.target.value)
+                                }}
+                                {...field}
+                            />
+                        )}
                     />
-                    {error && <p className="text-red-500">{error}</p>}
-                    {success && <p className="text-green-500">{success}</p>}
+                    <Controller
+                        name="confirmPassword"
+                        control={control}
+                        disabled={isRegisterPending}
+                        render={({
+                            field: { onChange, ...field },
+                            fieldState: { invalid, error },
+                        }) => (
+                            <InputWithLabel
+                                label="Подтверждение пароля"
+                                id="confirmPassword"
+                                type="password"
+                                invalid={invalid}
+                                error={error?.message}
+                                onChange={(event) => {
+                                    onChange(event.target.value)
+                                }}
+                                {...field}
+                            />
+                        )}
+                    />
+
                     <div className="flex items-center justify-between gap-2">
-                        <Button variant="link" asChild>
-                            <Link href="/auth/login">Войти</Link>
-                        </Button>
-                        <Button type="submit" disabled={loading}>
+                        <Link
+                            className={buttonVariants({ variant: 'link' })}
+                            href="/auth/login"
+                        >
+                            Войти
+                        </Link>
+                        <Button type="submit" loading={isRegisterPending}>
                             Зарегистрироваться
                         </Button>
                     </div>

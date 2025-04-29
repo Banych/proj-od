@@ -33,7 +33,7 @@ const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
             return user.role === Role.ADMIN || user.id === item.userId
         }, [item.userId, user.id, user.role])
 
-        const { mutate: deleteRequest, isPending: isDeleteRequesstPending } =
+        const { mutate: deleteRequest, isPending: isDeleteRequestPending } =
             useMutation({
                 mutationKey: ['delete-request', item.id],
                 mutationFn: async () => {
@@ -93,15 +93,16 @@ const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
                     <Button
                         variant="secondary"
                         onClick={handleOpen}
-                        disabled={isDeleteRequesstPending}
+                        disabled={isDeleteRequestPending}
                     >
-                        Open
+                        Открыть
                     </Button>
                     <Button
                         variant="destructive"
                         size="icon"
                         onClick={handleDelete}
-                        loading={!isDeleteAllowed || isDeleteRequesstPending}
+                        disabled={!isDeleteAllowed}
+                        loading={isDeleteRequestPending}
                     >
                         <Trash className="size-6" />
                     </Button>

@@ -1,9 +1,10 @@
+import { FC } from 'react'
+
 import RequestsList from '@/components/requests-list'
-import { db } from '@/lib/db'
 import { RequestStatus, Role } from '@/generated/prisma-client'
+import { db } from '@/lib/db'
 import getSessionUser from '@/lib/get-session-user'
 import { RequestWithUser } from '@/types/dtos'
-import { FC } from 'react'
 
 type CompletedRequestsPageProps = {
     searchParams?: Promise<{

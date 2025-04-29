@@ -120,7 +120,7 @@ const AdminUsersList = () => {
                 >
                     Дата создания
                 </TableHeaderCell>
-                <TableHeaderCell value="actions"></TableHeaderCell>
+                <TableHeaderCell value="actions" />
                 {!isLoading &&
                     usersList.map((user, index) => (
                         <UserListItem
