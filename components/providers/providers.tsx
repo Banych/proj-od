@@ -2,6 +2,7 @@
 
 import FiltersProvider from '@/components/providers/filters-provider'
 import SessionProvider from '@/components/providers/session-provider'
+import TimezoneProvider from '@/components/providers/timezone-provider'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { FC, PropsWithChildren } from 'react'
@@ -13,7 +14,9 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
         <SessionProvider>
             <TooltipProvider>
                 <QueryClientProvider client={queryClient}>
-                    <FiltersProvider>{children}</FiltersProvider>
+                    <TimezoneProvider>
+                        <FiltersProvider>{children}</FiltersProvider>
+                    </TimezoneProvider>
                 </QueryClientProvider>
             </TooltipProvider>
         </SessionProvider>

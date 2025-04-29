@@ -1,4 +1,6 @@
 import { format } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
+import { ru } from 'date-fns/locale'
 import Link from 'next/link'
 import { FC } from 'react'
 
@@ -18,6 +20,12 @@ const Messages: FC<MessagesProps> = async ({ messages, requestId }) => {
 
     if (!dbUser) {
         return null
+    }
+
+    const formatDate = (date: Date) => {
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+        const timezonedDate = toZonedTime(date.toISOString(), timezone)
+        return format(timezonedDate, 'dd.MM.yyyy HH:mm', { locale: ru })
     }
 
     return (
@@ -42,7 +50,7 @@ const Messages: FC<MessagesProps> = async ({ messages, requestId }) => {
                                 </Link>
                             </Button>
                             <span className="text-xs text-muted-foreground">
-                                {format(message.createdAt, 'dd.MM.yyyy HH:mm')}
+                                {formatDate(message.createdAt)}
                             </span>
                         </CardHeader>
                         <CardContent className="px-4 text-lg">
