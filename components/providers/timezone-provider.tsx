@@ -3,21 +3,21 @@
 import { createContext, FC, PropsWithChildren } from 'react'
 
 export type TimezoneContext = {
-    timezone: string
+  timezone: string
 }
 
 export const TimezoneContext = createContext<TimezoneContext>({
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 })
 
 export const TimezoneProvider: FC<PropsWithChildren> = ({ children }) => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
-    return (
-        <TimezoneContext.Provider value={{ timezone }}>
-            {children}
-        </TimezoneContext.Provider>
-    )
+  return (
+    <TimezoneContext.Provider value={{ timezone }}>
+      {children}
+    </TimezoneContext.Provider>
+  )
 }
 
 export default TimezoneProvider

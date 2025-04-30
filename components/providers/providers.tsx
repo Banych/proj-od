@@ -8,19 +8,19 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { FC, PropsWithChildren } from 'react'
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
-    const queryClient = new QueryClient()
+  const queryClient = new QueryClient()
 
-    return (
-        <SessionProvider>
-            <TooltipProvider>
-                <QueryClientProvider client={queryClient}>
-                    <TimezoneProvider>
-                        <FiltersProvider>{children}</FiltersProvider>
-                    </TimezoneProvider>
-                </QueryClientProvider>
-            </TooltipProvider>
-        </SessionProvider>
-    )
+  return (
+    <SessionProvider>
+      <TooltipProvider>
+        <QueryClientProvider client={queryClient}>
+          <TimezoneProvider>
+            <FiltersProvider>{children}</FiltersProvider>
+          </TimezoneProvider>
+        </QueryClientProvider>
+      </TooltipProvider>
+    </SessionProvider>
+  )
 }
 
 export default Providers

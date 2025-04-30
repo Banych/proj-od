@@ -6,18 +6,18 @@ import { toZonedTime } from 'date-fns-tz'
 import { format } from 'date-fns'
 
 type FormattedDateProps = {
-    date: Date
-    formatString?: string
+  date: Date
+  formatString?: string
 }
 
 const FormattedDate: FC<FormattedDateProps> = ({
-    date,
-    formatString = 'dd.MM.yyyy HH:mm',
+  date,
+  formatString = 'dd.MM.yyyy HH:mm',
 }) => {
-    const { timezone } = useTimezone()
-    const timezonedDate = toZonedTime(date, timezone)
-    const formattedDate = format(timezonedDate, formatString)
-    return formattedDate
+  const { timezone } = useTimezone()
+  const timezonedDate = toZonedTime(date, timezone)
+  const formattedDate = format(timezonedDate, formatString)
+  return formattedDate
 }
 
 export default FormattedDate

@@ -1,7 +1,7 @@
 import RequestForm from '@/components/request-form'
 
 const NewRequestPage = () => {
-    return <RequestForm />
+  return <RequestForm />
 }
 
 export default NewRequestPage

@@ -18,7 +18,6 @@ const config = [
     'next/typescript',
     'prettier/prettier',
     'plugin:react/recommended',
-    'plugin:tailwindcss/recommended',
     'plugin:css/standard',
     'plugin:prettier/recommended',
     'plugin:@next/next/recommended'
@@ -28,6 +27,8 @@ const config = [
   {
     ignores: ['node_modules/**/*', '.next/**/*', 'out/**/*'],
     files: ['*.js', '*.jsx', '*.ts', '*.tsx'],
+  },
+  {
     rules: {
       'react/react-in-jsx-scope': 'off',
     },

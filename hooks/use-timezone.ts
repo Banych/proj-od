@@ -2,12 +2,14 @@ import { useContext } from 'react'
 
 import { TimezoneContext } from '@/components/providers/timezone-provider'
 
-export default () => {
-    const context = useContext(TimezoneContext)
+const useTimezone = () => {
+  const context = useContext(TimezoneContext)
 
-    if (!context) {
-        throw new Error('useTimezone must be used within a TimezoneProvider')
-    }
+  if (!context) {
+    throw new Error('useTimezone must be used within a TimezoneProvider')
+  }
 
-    return context
+  return context
 }
+
+export default useTimezone

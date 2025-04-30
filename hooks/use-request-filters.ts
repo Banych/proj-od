@@ -2,12 +2,14 @@ import { useContext } from 'react'
 
 import { FiltersContext } from '@/components/providers/filters-provider'
 
-export default () => {
-    const context = useContext(FiltersContext)
+const useRequestFilters = () => {
+  const context = useContext(FiltersContext)
 
-    if (!context) {
-        throw new Error('useFilters must be used within a FiltersProvider')
-    }
+  if (!context) {
+    throw new Error('useFilters must be used within a FiltersProvider')
+  }
 
-    return context
+  return context
 }
+
+export default useRequestFilters

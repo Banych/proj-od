@@ -8,77 +8,73 @@ import { MessageWithUser, RequestWithUser } from '@/types/dtos'
 import { notFound } from 'next/navigation'
 
 type RequestPageProps = {
-    params: {
-        orderNumber: string
-    }
+  params: Promise<{
+    orderNumber: string
+  }>
 }
 
 // export const cache = 'force-no-store'
 
-const RequestPage: FC<RequestPageProps> = async props => {
-    const params = await props.params;
-    const { orderNumber } = params
+const RequestPage: FC<RequestPageProps> = async (props) => {
+  const params = await props.params
+  const { orderNumber } = params
 
-    const dbUser = await getSessionUser()
+  const dbUser = await getSessionUser()
 
-    if (!dbUser) {
-        return null
-    }
+  if (!dbUser) {
+    return null
+  }
 
-    const orderNumberInt = parseInt(orderNumber, 10)
-    if (isNaN(orderNumberInt) || orderNumberInt <= 0) {
-        return notFound()
-    }
+  const orderNumberInt = parseInt(orderNumber, 10)
+  if (isNaN(orderNumberInt) || orderNumberInt <= 0) {
+    return notFound()
+  }
 
-    const requestItem = (await db.request.findUnique({
-        where: {
-            orderNumber: orderNumberInt,
+  const requestItem = (await db.request.findUnique({
+    where: {
+      orderNumber: orderNumberInt,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          role: true,
+          name: true,
+          surname: true,
+          email: true,
         },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    username: true,
-                    role: true,
-                    name: true,
-                    surname: true,
-                    email: true,
-                },
-            },
-        },
-    })) as RequestWithUser
+      },
+    },
+  })) as RequestWithUser
 
-    const messages = (await db.message.findMany({
-        where: {
-            requestId: requestItem.id,
+  const messages = (await db.message.findMany({
+    where: {
+      requestId: requestItem.id,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          role: true,
+          name: true,
+          surname: true,
+          email: true,
         },
-        orderBy: {
-            createdAt: 'desc',
-        },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    username: true,
-                    role: true,
-                    name: true,
-                    surname: true,
-                    email: true,
-                },
-            },
-        },
-    })) as MessageWithUser[]
+      },
+    },
+  })) as MessageWithUser[]
 
-    return (
-        <ScrollArea>
-            <RequestDetails
-                item={requestItem}
-                messages={messages}
-                user={dbUser}
-            />
-            <ScrollBar orientation="vertical" />
-        </ScrollArea>
-    )
+  return (
+    <ScrollArea>
+      <RequestDetails item={requestItem} messages={messages} user={dbUser} />
+      <ScrollBar orientation="vertical" />
+    </ScrollArea>
+  )
 }
 
 export default RequestPage
