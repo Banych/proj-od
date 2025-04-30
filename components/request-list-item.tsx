@@ -7,7 +7,7 @@ import { useRouter } from 'nextjs-toploader/app'
 import { forwardRef, Fragment, useCallback, useMemo } from 'react'
 
 import FormattedDate from '@/components/formatted-date'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Tooltip,
   TooltipContent,
@@ -17,6 +17,7 @@ import { RequestStatus, Role } from '@/generated/prisma-client'
 import { useToast } from '@/hooks/use-toast'
 import { getSalesOrganizationName, getTypeName } from '@/lib/utils'
 import { RequestWithUser, UserDTO } from '@/types/dtos'
+import Link from 'next/link'
 
 type RequestItemProps = {
   item: RequestWithUser
@@ -25,7 +26,7 @@ type RequestItemProps = {
 
 const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
   ({ item, user }, ref) => {
-    const { push, refresh } = useRouter()
+    const { refresh } = useRouter()
     const { toast } = useToast()
     const queryClient = useQueryClient()
 
@@ -61,10 +62,6 @@ const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
       deleteRequest()
     }, [deleteRequest])
 
-    const handleOpen = useCallback(() => {
-      push(`/requests/${item.orderNumber}`)
-    }, [item.orderNumber, push])
-
     return (
       <Fragment>
         <div className="flex items-center gap-2" ref={ref}>
@@ -88,13 +85,12 @@ const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
         <div className="flex items-center">{item.warehouse}</div>
         <div className="flex items-center">{item.resource}</div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            onClick={handleOpen}
-            disabled={isDeleteRequestPending}
+          <Link
+            className={buttonVariants({ variant: 'secondary' })}
+            href={`/requests/${item.orderNumber}`}
           >
             Открыть
-          </Button>
+          </Link>
           <Button
             variant="destructive"
             size="icon"

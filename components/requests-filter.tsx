@@ -25,6 +25,7 @@ import defaultRequestTypes from '@/constants/default-request-types'
 import salesOrganizations from '@/constants/default-sales-organizations'
 import { RequestType, SalesOrganizationType } from '@/generated/prisma-client'
 import useRequestFilters from '@/hooks/use-request-filters'
+import { Filter } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useCallback, useState } from 'react'
 
@@ -69,7 +70,10 @@ const RequestsFilter = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline">Фильтры</Button>
+        <Button variant="outline">
+          <Filter className="size-4 mr-1" />
+          Фильтры
+        </Button>
       </SheetTrigger>
       <SheetContent className="flex flex-col">
         <SheetHeader>

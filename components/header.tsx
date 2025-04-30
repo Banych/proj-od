@@ -1,7 +1,9 @@
+import { ShieldUser } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import RequestsFilter from '@/components/requests-filter'
+import { buttonVariants } from '@/components/ui/button'
 import MenuListItem from '@/components/ui/menu-list-item'
 import {
   NavigationMenu,
@@ -11,9 +13,8 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import UserInfoSmall from '@/components/user-info-small'
-import getSessionUser from '@/lib/get-session-user'
 import { Role } from '@/generated/prisma-client'
-import { buttonVariants } from '@/components/ui/button'
+import getSessionUser from '@/lib/get-session-user'
 
 const Header = async () => {
   const user = await getSessionUser()
@@ -67,6 +68,7 @@ const Header = async () => {
           href="/admin"
           className={buttonVariants({ variant: 'destructive' })}
         >
+          <ShieldUser className="size-4 mr-1" />
           Админка
         </Link>
       )}
