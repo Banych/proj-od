@@ -11,8 +11,17 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import UserInfoSmall from '@/components/user-info-small'
+import getSessionUser from '@/lib/get-session-user'
+import { Role } from '@/generated/prisma-client'
+import { buttonVariants } from '@/components/ui/button'
 
-const Header = () => {
+const Header = async () => {
+  const user = await getSessionUser()
+
+  if (!user) {
+    return null
+  }
+
   return (
     <div className="container flex items-center justify-between gap-7 p-4">
       <div className="flex items-center gap-4">
@@ -53,6 +62,14 @@ const Header = () => {
         </NavigationMenu>
         <RequestsFilter />
       </div>
+      {user.role === Role.ADMIN && (
+        <Link
+          href="/admin"
+          className={buttonVariants({ variant: 'destructive' })}
+        >
+          Админка
+        </Link>
+      )}
       <UserInfoSmall />
     </div>
   )
