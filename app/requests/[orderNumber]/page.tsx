@@ -5,17 +5,19 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { db } from '@/lib/db'
 import getSessionUser from '@/lib/get-session-user'
 import { MessageWithUser, RequestWithUser } from '@/types/dtos'
+import { notFound } from 'next/navigation'
 
 type RequestPageProps = {
     params: {
-        id: string
+        orderNumber: string
     }
 }
 
 // export const cache = 'force-no-store'
 
-const RequestPage: FC<RequestPageProps> = async ({ params }) => {
-    const { id } = params
+const RequestPage: FC<RequestPageProps> = async props => {
+    const params = await props.params;
+    const { orderNumber } = params
 
     const dbUser = await getSessionUser()
 
@@ -23,9 +25,14 @@ const RequestPage: FC<RequestPageProps> = async ({ params }) => {
         return null
     }
 
+    const orderNumberInt = parseInt(orderNumber, 10)
+    if (isNaN(orderNumberInt) || orderNumberInt <= 0) {
+        return notFound()
+    }
+
     const requestItem = (await db.request.findUnique({
         where: {
-            id,
+            orderNumber: orderNumberInt,
         },
         include: {
             user: {
@@ -43,7 +50,7 @@ const RequestPage: FC<RequestPageProps> = async ({ params }) => {
 
     const messages = (await db.message.findMany({
         where: {
-            requestId: id,
+            requestId: requestItem.id,
         },
         orderBy: {
             createdAt: 'desc',

@@ -4,13 +4,14 @@ import RequestForm from '@/components/request-form'
 import { db } from '@/lib/db'
 import getSessionUser from '@/lib/get-session-user'
 import { CreateRequestDTO, RequestWithUser } from '@/types/dtos'
+import { notFound } from 'next/navigation'
 
 type EditRequestPageProps = {
-    params: Promise<{ id: string }>
+    params: Promise<{ orderNumber: string }>
 }
 
 const EditRequestPage: FC<EditRequestPageProps> = async ({ params }) => {
-    const { id } = await params
+    const { orderNumber } = await params
 
     const dbUser = await getSessionUser()
 
@@ -18,9 +19,14 @@ const EditRequestPage: FC<EditRequestPageProps> = async ({ params }) => {
         return null
     }
 
+    const orderNumberInt = parseInt(orderNumber, 10)
+    if (isNaN(orderNumberInt) || orderNumberInt <= 0) {
+        return notFound()
+    }
+
     const requestItem = (await db.request.findUnique({
         where: {
-            id,
+            orderNumber: orderNumberInt,
         },
         include: {
             user: {
@@ -42,14 +48,14 @@ const EditRequestPage: FC<EditRequestPageProps> = async ({ params }) => {
         await db.message.create({
             data: {
                 message: 'Запрос обновлен',
-                requestId: id,
+                requestId: requestItem.id,
                 userId: dbUser.id,
             },
         })
 
         return db.request.update({
             where: {
-                id,
+                id: requestItem.id,
             },
             data: {
                 ...values,

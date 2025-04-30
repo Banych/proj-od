@@ -62,8 +62,8 @@ const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
         }, [deleteRequest])
 
         const handleOpen = useCallback(() => {
-            push(`/requests/${item.id}`)
-        }, [item.id, push])
+            push(`/requests/${item.orderNumber}`)
+        }, [item.orderNumber, push])
 
         return (
             <Fragment>
