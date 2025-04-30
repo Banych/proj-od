@@ -8,7 +8,7 @@ import {
 import { cn } from '@/lib/utils'
 
 const MenuListItem = React.forwardRef<
-  React.ElementRef<typeof Link>,
+  React.ComponentRef<typeof Link>,
   React.ComponentPropsWithoutRef<typeof Link>
 >(({ className, title, children, ...props }, ref) => {
   return (
