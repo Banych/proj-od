@@ -9,7 +9,7 @@ const client = {
     sortOrder: 'asc' | 'desc',
     page: number,
     limit: number,
-    params: Record<string, string | string[] | Date | undefined>
+    params: Record<string, string | string[] | Date | undefined | null>
   ): Promise<RequestWithUser[]> => {
     const query = new URLSearchParams({
       sortBy,

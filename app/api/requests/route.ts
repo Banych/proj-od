@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (orderNumber) {
-      whereClause = { ...whereClause, orderNumber }
+      whereClause = { ...whereClause, orderNumber: parseInt(orderNumber, 10) }
     }
 
     if (dateFrom) {
@@ -179,7 +179,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (warehouse) {
-      whereClause = { ...whereClause, warehouse }
+      whereClause = { ...whereClause, warehouse: { contains: warehouse } }
     }
 
     const requests = await db.request.findMany({

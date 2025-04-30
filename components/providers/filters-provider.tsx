@@ -5,35 +5,56 @@ import { createContext, FC, PropsWithChildren, useState } from 'react'
 import { RequestType, SalesOrganizationType } from '@/generated/prisma-client'
 
 export type RequestFilters = {
-  orderNumber: string
-  dateFrom: Date
-  dateTo: Date
-  type: RequestType
-  salesOrganization: SalesOrganizationType
-  warehouse: string
+  orderNumber: string | null
+  dateFrom: Date | null
+  dateTo: Date | null
+  type: RequestType | null
+  salesOrganization: SalesOrganizationType | null
+  warehouse: string | null
 }
 
 export type FiltersContextType = {
-  filters: Partial<RequestFilters>
+  filters: RequestFilters
   setFilters: (filters: Partial<RequestFilters>) => void
   resetFilters: () => void
 }
 
 export const FiltersContext = createContext<FiltersContextType>({
-  filters: {},
+  filters: {
+    orderNumber: null,
+    dateFrom: null,
+    dateTo: null,
+    type: null,
+    salesOrganization: null,
+    warehouse: null,
+  },
   setFilters: () => {},
   resetFilters: () => {},
 })
 
 const FiltersProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [filters, setFilters] = useState<Partial<RequestFilters>>({})
+  const [filters, setFilters] = useState<RequestFilters>({
+    orderNumber: null,
+    dateFrom: null,
+    dateTo: null,
+    type: null,
+    salesOrganization: null,
+    warehouse: null,
+  })
 
   const setFiltersHandler = (newFilters: Partial<RequestFilters>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }))
   }
 
   const resetFiltersHandler = () => {
-    setFilters({})
+    setFilters({
+      orderNumber: null,
+      dateFrom: null,
+      dateTo: null,
+      type: null,
+      salesOrganization: null,
+      warehouse: null,
+    })
   }
 
   return (
