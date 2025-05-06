@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     const newUser = {
       username,
       password: hashedPassword,
-      role: Role.DISPATCHER,
+      role: Role.MANAGER,
     }
 
     const response = await db.user.create({
