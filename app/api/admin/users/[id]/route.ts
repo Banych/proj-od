@@ -52,7 +52,6 @@ export async function PUT(
 
     return NextResponse.json(updatedUser, { status: 200 })
   } catch (error: unknown) {
-    console.error('Error updating user:', error)
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { message: 'Invalid request body' },
@@ -95,9 +94,8 @@ export async function DELETE(
 
     return NextResponse.json(deletedUser, { status: 200 })
   } catch (error: unknown) {
-    console.error('Error deleting user:', error)
     return NextResponse.json(
-      { message: 'Failed to delete user' },
+      { message: 'Failed to delete user', error: (error as Error).message },
       { status: 500 }
     )
   }

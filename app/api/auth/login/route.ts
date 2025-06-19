@@ -48,9 +48,11 @@ export async function POST(req: NextRequest) {
       user: { id: user.id, username: user.username, role: user.role },
     })
   } catch (error) {
-    console.error('Error in login:', error)
     return NextResponse.json(
-      { message: 'An unexpected error occurred' },
+      {
+        message: 'An unexpected error occurred',
+        error: (error as Error).message,
+      },
       { status: 500 }
     )
   }

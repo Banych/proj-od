@@ -30,6 +30,7 @@ The application uses Prisma as the ORM and supports PostgreSQL as the primary da
 ## API Endpoints
 
 ### `POST /api/auth/register`
+
 - **Description**: Registers a new user.
 - **Request Body**:
   ```json
@@ -39,10 +40,10 @@ The application uses Prisma as the ORM and supports PostgreSQL as the primary da
   }
   ```
 - **Response**:
-    - `201`: User created successfully.
-    - `400`: Username and password are required.
-    - `409`: User with this username already exists.
-    - `500`: An unexpected error occurred.
+  - `201`: User created successfully.
+  - `400`: Username and password are required.
+  - `409`: User with this username already exists.
+  - `500`: An unexpected error occurred.
 
 ## Setup
 
@@ -67,6 +68,7 @@ For detailed instructions on how to deploy the project with Next.js, refer to th
 For database deployment, ensure your PostgreSQL instance is properly configured and accessible.
 
 ## Additional Notes
+
 - The `admin` section of the application includes tools for managing users and requests.
 - The `requests` module now supports advanced filtering and sorting.
 - The `profile` module includes enhanced validation for user data.

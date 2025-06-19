@@ -1,0 +1,27 @@
+{
+  "recommendations": [
+    // Essential for development
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.vscode-typescript-next",
+
+    // React/Next.js
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-json",
+
+    // Database/Prisma
+    "prisma.prisma",
+
+    // Git
+    "eamodio.gitlens",
+
+    // Utilities
+    "christian-kohler.path-intellisense",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+
+    // Optional but helpful
+    "ms-vscode.vscode-json",
+    "yzhang.markdown-all-in-one"
+  ]
+}

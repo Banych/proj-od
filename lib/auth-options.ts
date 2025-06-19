@@ -1,5 +1,5 @@
-import CredentialsProvider from 'next-auth/providers/credentials'
 import { NextAuthOptions } from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
 
 // Function to convert an object to URL-encoded form data
 function toFormData(obj: { [key: string]: unknown }) {
@@ -22,7 +22,6 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials) {
-          console.error('No credentials provided')
           return null
         }
         const data = {
@@ -48,11 +47,11 @@ export const authOptions: NextAuthOptions = {
           if (res.ok && resData && resData.user) {
             return resData.user
           } else {
-            console.error('Authorization failed:', resData)
             return null
           }
         } catch (error) {
-          console.error('Authorization error:', error)
+          // eslint-disable-next-line no-console
+          console.error('Error during authorization:', error)
           return null
         }
       },

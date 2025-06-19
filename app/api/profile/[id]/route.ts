@@ -28,9 +28,8 @@ export async function PUT(
 
     return NextResponse.json(await response, { status: 200 })
   } catch (error: unknown) {
-    console.error(error)
     return NextResponse.json(
-      { error: 'Failed to update user' },
+      { error: 'Failed to update user', message: (error as Error).message },
       { status: 500 }
     )
   }

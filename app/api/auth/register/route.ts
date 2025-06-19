@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs'
 import { NextRequest, NextResponse } from 'next/server'
 
-import { db } from '@/lib/db'
 import { Role } from '@/generated/prisma-client'
+import { db } from '@/lib/db'
 
 export async function POST(req: NextRequest) {
   try {
@@ -51,9 +51,11 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     )
   } catch (error) {
-    console.error('Error in registration:', error)
     return NextResponse.json(
-      { message: 'An unexpected error occurred' },
+      {
+        message: 'An unexpected error occurred',
+        error: (error as Error).message,
+      },
       { status: 500 }
     )
   }

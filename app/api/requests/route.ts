@@ -10,7 +10,7 @@ import {
 import { db } from '@/lib/db'
 import getSessionUser from '@/lib/get-session-user'
 import { CreateRequestDTO } from '@/types/dtos'
-import { parse, startOfDay, endOfDay } from 'date-fns'
+import { endOfDay, parse, startOfDay } from 'date-fns'
 
 export async function POST(request: NextRequest) {
   const body = (await request.json()) as CreateRequestDTO
@@ -204,7 +204,6 @@ export async function GET(request: NextRequest) {
     })
     return NextResponse.json(requests)
   } catch (error) {
-    console.error('Error fetching requests:', error)
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { message: 'Invalid query parameters' },

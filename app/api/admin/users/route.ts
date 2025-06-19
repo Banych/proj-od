@@ -94,7 +94,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(users)
   } catch (error: unknown) {
-    console.error('Error fetching users:', error)
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid query parameters' },
