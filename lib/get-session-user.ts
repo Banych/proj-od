@@ -22,6 +22,7 @@ const getSessionUser = async (): Promise<UserDTO | null> => {
       name: true,
       surname: true,
       email: true,
+      rfRu: true,
     },
   })
 
