@@ -7,7 +7,8 @@ export const odNumberValidator = z.object({
     .max(10, { message: 'OD должен содержать максимум 10 символов' })
     .regex(/^[a-zA-Z0-9]*$/, {
       message: 'OD может содержать только буквы и цифры',
-    }),
+    })
+    .nonempty({ message: 'Введите OD номер' }),
 })
 
 export const requestFormValidator = z.object({
@@ -26,6 +27,7 @@ export const requestFormValidator = z.object({
   }),
   odNumber: z
     .array(odNumberValidator)
+    .min(1, { message: 'Введите хотя бы одно значение OD' })
     .max(10, { message: 'Максимум 10 значений OD' }),
   comment: z.string().min(1, { message: 'Введите комментарий' }).max(1000, {
     message: 'Комментарий должен содержать максимум 1000 символов',

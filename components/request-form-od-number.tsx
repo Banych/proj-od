@@ -56,23 +56,25 @@ const RequestFormODNumber: FC<Props> = ({ control, isPending }) => {
             control={control}
             key={field.id}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <div className="flex items-center gap-2 col-span-1 col-end-2">
-                <Input
-                  value={value}
-                  onChange={onChange}
-                  placeholder="Введите OD"
-                  disabled={isPending}
-                  className={error ? 'border-red-500' : ''}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => remove(index)}
-                  disabled={isPending}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+              <div className="flex flex-col gap-2 col-span-1 col-end-2">
+                <div className="flex flex-row items-center gap-2">
+                  <Input
+                    value={value}
+                    onChange={onChange}
+                    placeholder="Введите OD"
+                    disabled={isPending}
+                    className={error ? 'border-red-500' : ''}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => remove(index)}
+                    disabled={isPending}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
                 {error && (
                   <span className="text-red-500 text-sm">{error.message}</span>
                 )}
