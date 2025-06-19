@@ -1,10 +1,12 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { ClassValue } from 'clsx'
 import { useRouter } from 'nextjs-toploader/app'
-import { FC, useCallback, useMemo, useState } from 'react'
+import { FC, useCallback, useMemo } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { DatePicker } from '@/components/ui/date-picker'
@@ -26,12 +28,13 @@ import {
 } from '@/generated/prisma-client'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
+import { requestFormValidator } from '@/lib/validators/request-form.validator'
 import { CreateRequestDTO } from '@/types/dtos'
 
 type RequestFormProps = {
   className?: ClassValue
   onFormSubmit?: (value: CreateRequestDTO) => Promise<Request>
-  initialValues?: CreateRequestDTO
+  initialValues?: Partial<CreateRequestDTO>
   submitButtonText?: string
 }
 
@@ -41,26 +44,25 @@ const RequestForm: FC<RequestFormProps> = ({
   onFormSubmit,
   submitButtonText = 'Отправить',
 }) => {
-  const [requestType, setRequestType] = useState<RequestType | undefined>(
-    initialValues?.type
-  )
-  const [salesOrganization, setSalesOrganization] = useState<
-    SalesOrganizationType | undefined
-  >(initialValues?.salesOrganization)
-  const [warehouse, setWarehouse] = useState<string>(
-    initialValues?.warehouse || ''
-  )
-  const [date, setDate] = useState<Date>(
-    initialValues?.date ? initialValues.date : new Date()
-  )
-  const [comment, setComment] = useState<string>(initialValues?.comment || '')
-  const [resource, setResource] = useState<string>(
-    initialValues?.resource || ''
-  )
-
   const { toast } = useToast()
   const { push } = useRouter()
 
+  const { control, handleSubmit, watch } = useForm<CreateRequestDTO>({
+    defaultValues: {
+      type: initialValues?.type || RequestType.ONE_DAY_DELIVERY,
+      salesOrganization:
+        initialValues?.salesOrganization || SalesOrganizationType.SALES_3803,
+      warehouse: initialValues?.warehouse || '',
+      date: initialValues?.date || new Date(),
+      comment: initialValues?.comment || '',
+      resource: initialValues?.resource || '',
+    },
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    resolver: zodResolver(requestFormValidator),
+  })
+
+  const watchedType = watch('type')
   const { mutate, isPending } = useMutation({
     mutationKey: ['createRequest'],
     mutationFn: async (value: CreateRequestDTO) => {
@@ -82,9 +84,9 @@ const RequestForm: FC<RequestFormProps> = ({
           variant: 'default',
           title: 'Запрос успешно отправлен',
         })
-        const id = response.id
+        const orderNumber = response.orderNumber
 
-        push(`/requests/${id}`)
+        push(`/requests/${orderNumber}`)
       } else {
         toast({
           variant: 'destructive',
@@ -101,167 +103,201 @@ const RequestForm: FC<RequestFormProps> = ({
   })
 
   const isResourceShown = useMemo(
-    () => requestType === RequestType.ONE_DAY_DELIVERY,
-    [requestType]
+    () => watchedType === RequestType.ONE_DAY_DELIVERY,
+    [watchedType]
   )
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault()
-
-      if (!requestType) {
-        toast({
-          variant: 'destructive',
-          title: 'Выберите тип запроса',
-        })
-        return
-      }
-
-      if (!salesOrganization) {
-        toast({
-          variant: 'destructive',
-          title: 'Выберите организацию',
-        })
-        return
-      }
-
-      if (!warehouse) {
-        toast({
-          variant: 'destructive',
-          title: 'Введите номер склада',
-        })
-        return
-      }
-
-      if (!comment) {
-        toast({
-          variant: 'destructive',
-          title: 'Введите комментарий',
-        })
-        return
-      }
-
-      const data: CreateRequestDTO = {
-        type: requestType,
-        salesOrganization,
-        warehouse,
-        date: date,
-        comment,
-        resource,
-      }
-
+  const onSubmit = useCallback(
+    (data: CreateRequestDTO) => {
       mutate(data)
     },
-    [
-      comment,
-      date,
-      mutate,
-      requestType,
-      resource,
-      salesOrganization,
-      toast,
-      warehouse,
-    ]
+    [mutate]
   )
-
-  const handleRequestTypeChange = useCallback((value: RequestType) => {
-    setRequestType(value)
-  }, [])
-
-  const handleSalesOrganizationChange = useCallback(
-    (value: SalesOrganizationType) => {
-      setSalesOrganization(value)
-    },
-    []
-  )
-
-  const handleWarehouseChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setWarehouse(e.target.value)
-    },
-    []
-  )
-
-  const handleCommentChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setComment(e.target.value)
-    },
-    []
-  )
-
-  const handleResourceChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setResource(e.target.value)
-    },
-    []
-  )
-
   return (
     <form
       className={cn('flex grow flex-col gap-4', className)}
-      onSubmit={handleSubmit}
+      onSubmit={
+        handleSubmit(onSubmit) as React.FormEventHandler<HTMLFormElement>
+      }
     >
-      <div className="flex items-center gap-2">
-        <Select
-          value={requestType}
-          onValueChange={handleRequestTypeChange}
-          disabled={isPending}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Выберите тип" />
-          </SelectTrigger>
-          <SelectContent>
-            {defaultRequestTypes.map((type) => (
-              <SelectItem key={type.value} value={type.value}>
-                {type.text}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select
-          value={salesOrganization}
-          onValueChange={handleSalesOrganizationChange}
-          disabled={isPending}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Выберите организацию" />
-          </SelectTrigger>
-          <SelectContent>
-            {salesOrganizations.map((salesOrganization) => (
-              <SelectItem
-                key={salesOrganization.value}
-                value={salesOrganization.value}
-              >
-                {salesOrganization.text}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Input
-          value={warehouse}
-          onChange={handleWarehouseChange}
-          placeholder="Введите номер склад"
-          disabled={isPending}
-        />
-        <DatePicker date={date} onSelect={setDate} />
-      </div>
-      <div className="flex grow items-start gap-2">
-        <Textarea
-          placeholder="Введите комментарий"
-          value={comment}
-          onChange={handleCommentChange}
-          className="h-full max-h-48"
-          disabled={isPending}
-        />
-        {isResourceShown && (
-          <Input
-            value={resource}
-            className="w-[200px]"
-            onChange={handleResourceChange}
-            placeholder="Введите ресурс"
-            disabled={isPending}
-          />
-        )}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-start gap-2">
+          <div className="flex flex-col gap-1 flex-1">
+            <Controller
+              name="type"
+              control={control}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <Select
+                    value={value}
+                    onValueChange={onChange}
+                    disabled={isPending}
+                  >
+                    <SelectTrigger className={error ? 'border-red-500' : ''}>
+                      <SelectValue placeholder="Выберите тип" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {defaultRequestTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.text}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {error && (
+                    <span className="text-red-500 text-sm">
+                      {error.message}
+                    </span>
+                  )}
+                </>
+              )}
+            />
+          </div>
+          <div className="flex flex-col gap-1 flex-1">
+            <Controller
+              name="salesOrganization"
+              control={control}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <Select
+                    value={value}
+                    onValueChange={onChange}
+                    disabled={isPending}
+                  >
+                    <SelectTrigger className={error ? 'border-red-500' : ''}>
+                      <SelectValue placeholder="Выберите организацию" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {salesOrganizations.map((salesOrganization) => (
+                        <SelectItem
+                          key={salesOrganization.value}
+                          value={salesOrganization.value}
+                        >
+                          {salesOrganization.text}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {error && (
+                    <span className="text-red-500 text-sm">
+                      {error.message}
+                    </span>
+                  )}
+                </>
+              )}
+            />
+          </div>
+          <div className="flex flex-col gap-1 flex-1">
+            <Controller
+              name="warehouse"
+              control={control}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <Input
+                    value={value}
+                    onChange={onChange}
+                    placeholder="Введите номер склада"
+                    disabled={isPending}
+                    className={error ? 'border-red-500' : ''}
+                  />
+                  {error && (
+                    <span className="text-red-500 text-sm">
+                      {error.message}
+                    </span>
+                  )}
+                </>
+              )}
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Controller
+              name="date"
+              control={control}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <DatePicker
+                    date={value}
+                    onSelect={onChange}
+                    isDisabled={isPending}
+                  />
+                  {error && (
+                    <span className="text-red-500 text-sm">
+                      {error.message}
+                    </span>
+                  )}
+                </>
+              )}
+            />
+          </div>
+        </div>
+        <div className="flex grow items-start gap-2">
+          <div className="flex flex-col gap-1 flex-1">
+            <Controller
+              name="comment"
+              control={control}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <Textarea
+                    placeholder="Введите комментарий"
+                    value={value}
+                    onChange={onChange}
+                    className={cn(
+                      'h-full max-h-48',
+                      error ? 'border-red-500' : ''
+                    )}
+                    disabled={isPending}
+                  />
+                  {error && (
+                    <span className="text-red-500 text-sm">
+                      {error.message}
+                    </span>
+                  )}
+                </>
+              )}
+            />
+          </div>
+          {isResourceShown && (
+            <div className="flex flex-col gap-1 w-[200px]">
+              <Controller
+                name="resource"
+                control={control}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <Input
+                      value={value || ''}
+                      onChange={onChange}
+                      placeholder="Введите ресурс"
+                      disabled={isPending}
+                      className={error ? 'border-red-500' : ''}
+                    />
+                    {error && (
+                      <span className="text-red-500 text-sm">
+                        {error.message}
+                      </span>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+          )}
+        </div>
       </div>
       <div className="flex justify-end">
         <Button type="submit" loading={isPending}>

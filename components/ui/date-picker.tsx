@@ -17,12 +17,14 @@ export type DatePickerProps = {
   date: Date | undefined
   onSelect: (date: Date) => void
   className?: string
+  isDisabled?: boolean
 }
 
 export const DatePicker: FC<DatePickerProps> = ({
   date,
   onSelect,
   className,
+  isDisabled = false,
 }) => {
   const [open, setOpen] = useState(false)
 
@@ -46,6 +48,7 @@ export const DatePicker: FC<DatePickerProps> = ({
             !date && 'text-muted-foreground',
             className
           )}
+          disabled={isDisabled}
         >
           <CalendarIcon className="mr-2 size-4" />
           {date ? format(date, 'PPP') : <span>Pick a date</span>}
