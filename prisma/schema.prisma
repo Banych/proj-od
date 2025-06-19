@@ -16,6 +16,7 @@ model User {
   username  String    @unique
   email     String?   @unique
   password  String
+  rfRu      String?   @db.VarChar(24)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   role      Role

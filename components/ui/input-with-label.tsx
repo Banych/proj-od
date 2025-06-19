@@ -12,11 +12,10 @@ type InputWithLabelProps = ComponentProps<typeof Input> & {
   error?: string
 }
 
-const InputWithLabel = forwardRef<HTMLDivElement, InputWithLabelProps>(
+const InputWithLabel = forwardRef<HTMLInputElement, InputWithLabelProps>(
   ({ label, id, orientation, size, invalid, error, ...others }, ref) => {
     return (
       <div
-        ref={ref}
         className={cn(
           'flex gap-2',
           orientation === 'horizontal' ? 'flex-row items-center' : 'flex-col',
@@ -27,6 +26,7 @@ const InputWithLabel = forwardRef<HTMLDivElement, InputWithLabelProps>(
         <div className="flex flex-col gap-2">
           <Input
             {...others}
+            ref={ref}
             id={id}
             className={cn(
               'w-full',

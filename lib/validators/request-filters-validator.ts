@@ -37,6 +37,7 @@ export const requestFiltersValidator = z.object({
     .nullable()
     .optional(),
   warehouse: z.string().nullable().optional(),
+  rfRu: z.string().nullable().optional(),
 })
 
 export type RequestFiltersType = z.infer<typeof requestFiltersValidator>

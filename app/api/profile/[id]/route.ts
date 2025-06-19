@@ -6,7 +6,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
-  const { name, surname, email, username } = await request.json()
+  const { name, surname, email, username, rfRu } = await request.json()
 
   try {
     const response = await db.user.update({
@@ -16,6 +16,7 @@ export async function PUT(
         surname,
         email,
         username,
+        rfRu,
       },
     })
 

@@ -46,6 +46,10 @@ const client = {
       query.append('warehouse', String(params.warehouse))
     }
 
+    if (params.rfRu) {
+      query.append('rfRu', String(params.rfRu))
+    }
+
     const { data } = await axios.get('/api/requests?' + query)
     return data
   },

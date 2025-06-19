@@ -12,6 +12,8 @@ import {
 import { RequestStatus } from '@/generated/prisma-client'
 import { getSalesOrganizationName, getTypeName } from '@/lib/utils'
 import { MessageWithUser, RequestWithUser, UserDTO } from '@/types/dtos'
+import Link from 'next/link'
+import { Badge } from './ui/badge'
 
 type RequestDetailsProps = {
   item: RequestWithUser
@@ -44,6 +46,16 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
               </TooltipContent>
             </Tooltip>
           )}
+          <Badge variant="secondary">
+            <Link href={`/users/${item.user.username}`}>
+              <span className="text-slate-500">Автор</span>{' '}
+              <span className="hover:underline">
+                {item.user.name && item.user.surname
+                  ? `${item.user.name} ${item.user.surname}`
+                  : item.user.username}
+              </span>
+            </Link>
+          </Badge>
         </h3>
         <RequestActions item={item} user={user} />
       </div>

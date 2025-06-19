@@ -49,6 +49,7 @@ export async function GET(request: NextRequest) {
       type,
       salesOrganization,
       warehouse,
+      rfRu,
     } = z
       .object({
         sortBy: z.string().optional(),
@@ -87,6 +88,7 @@ export async function GET(request: NextRequest) {
           ])
           .nullable(),
         warehouse: z.string().nullable(),
+        rfRu: z.string().nullable(),
       })
       .parse({
         sortBy: url.searchParams.get('sortBy'),
@@ -100,6 +102,7 @@ export async function GET(request: NextRequest) {
         type: url.searchParams.get('type'),
         salesOrganization: url.searchParams.get('salesOrganization'),
         warehouse: url.searchParams.get('warehouse'),
+        rfRu: url.searchParams.get('rfRu'),
       })
 
     const user = await getSessionUser()
@@ -182,6 +185,15 @@ export async function GET(request: NextRequest) {
       whereClause = { ...whereClause, warehouse: { contains: warehouse } }
     }
 
+    if (rfRu) {
+      whereClause = {
+        ...whereClause,
+        user: {
+          rfRu: { contains: rfRu, mode: 'insensitive' },
+        },
+      }
+    }
+
     const requests = await db.request.findMany({
       where: whereClause,
       orderBy: {
@@ -198,6 +210,7 @@ export async function GET(request: NextRequest) {
             name: true,
             surname: true,
             email: true,
+            rfRu: true,
           },
         },
       },

@@ -11,6 +11,7 @@ export type RequestFilters = {
   type: RequestType | null
   salesOrganization: SalesOrganizationType | null
   warehouse: string | null
+  rfRu: string | null
 }
 
 export type FiltersContextType = {
@@ -27,6 +28,7 @@ export const FiltersContext = createContext<FiltersContextType>({
     type: null,
     salesOrganization: null,
     warehouse: null,
+    rfRu: null,
   },
   setFilters: () => {},
   resetFilters: () => {},
@@ -40,6 +42,7 @@ const FiltersProvider: FC<PropsWithChildren> = ({ children }) => {
     type: null,
     salesOrganization: null,
     warehouse: null,
+    rfRu: null,
   })
 
   const setFiltersHandler = (newFilters: Partial<RequestFilters>) => {
@@ -54,6 +57,7 @@ const FiltersProvider: FC<PropsWithChildren> = ({ children }) => {
       type: null,
       salesOrganization: null,
       warehouse: null,
+      rfRu: null,
     })
   }
 

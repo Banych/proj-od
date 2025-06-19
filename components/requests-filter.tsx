@@ -51,6 +51,7 @@ const RequestsFilter = () => {
       type: filters.type,
       salesOrganization: filters.salesOrganization,
       warehouse: filters.warehouse,
+      rfRu: filters.rfRu,
     },
     resolver: zodResolver(requestFiltersValidator),
   })
@@ -95,7 +96,7 @@ const RequestsFilter = () => {
         </SheetHeader>
         <div className="grow">
           <form
-            className="grid grid-cols-1 grid-rows-6 gap-3"
+            className="grid grid-cols-1 grid-rows-7 gap-3"
             onSubmit={handleFormSubmit(handleSubmit)}
             id="filter-form"
           >
@@ -210,6 +211,25 @@ const RequestsFilter = () => {
                     placeholder="Введите номер склада"
                     value={value || ''}
                     onChange={(e) => onChange(e.target.value)}
+                    {...field}
+                  />
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-5 grid-rows-1 gap-2">
+              <label htmlFor="rfRu">RF/RU</label>
+              <Controller
+                control={control}
+                name="rfRu"
+                render={({ field: { onChange, value, ...field } }) => (
+                  <Input
+                    className="col-span-3 col-start-3"
+                    type="text"
+                    id="rfRu"
+                    placeholder="Введите RF/RU код"
+                    value={value || ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    maxLength={24}
                     {...field}
                   />
                 )}

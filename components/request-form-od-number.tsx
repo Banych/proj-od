@@ -67,7 +67,7 @@ const RequestFormODNumber: FC<Props> = ({ control, isPending }) => {
                   />
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="ghost"
                     size="icon"
                     onClick={() => remove(index)}
                     disabled={isPending}
