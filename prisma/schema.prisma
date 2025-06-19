@@ -32,6 +32,7 @@ model Request {
   status            RequestStatus         @default(CREATED)
   warehouse         String
   date              DateTime
+  odNumber          String                @default("")
   comment           String
   resource          String
   userId            String

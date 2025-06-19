@@ -26,6 +26,9 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
     item.salesOrganization
   )
 
+  // eslint-disable-next-line no-console
+  console.log('odNumber:', item.odNumber)
+
   return (
     <div className="flex flex-col gap-4 pb-4">
       <div className="flex items-center justify-between gap-4">
@@ -70,8 +73,27 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
         </div>
       </div>
 
+      {item.odNumber && item.odNumber.trim() && (
+        <div className="flex flex-col gap-2">
+          <div className="font-bold">OD:</div>
+          <div className="flex flex-wrap gap-2">
+            {item.odNumber
+              .split('|')
+              .filter((od) => od.trim() !== '')
+              .map((od, index) => (
+                <span
+                  key={index}
+                  className="px-2 py-1 bg-gray-100 rounded text-sm font-mono"
+                >
+                  {od}
+                </span>
+              ))}
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col gap-2 pb-4">
-        <div className="font-bold">ОД/Текс</div>
+        <div className="font-bold">Комментарий:</div>
         <div>{item.comment}</div>
       </div>
 

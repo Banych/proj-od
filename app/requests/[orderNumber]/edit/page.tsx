@@ -3,7 +3,11 @@ import { FC } from 'react'
 import RequestForm from '@/components/request-form'
 import { db } from '@/lib/db'
 import getSessionUser from '@/lib/get-session-user'
-import { CreateRequestDTO, RequestWithUser } from '@/types/dtos'
+import {
+  CreateRequestDTO,
+  CreateRequestFormDTO,
+  RequestWithUser,
+} from '@/types/dtos'
 import { notFound } from 'next/navigation'
 
 type EditRequestPageProps = {
@@ -24,7 +28,7 @@ const EditRequestPage: FC<EditRequestPageProps> = async ({ params }) => {
     return notFound()
   }
 
-  const requestItem = (await db.request.findUnique({
+  const { odNumber, ...requestItem } = (await db.request.findUnique({
     where: {
       orderNumber: orderNumberInt,
     },
@@ -63,9 +67,13 @@ const EditRequestPage: FC<EditRequestPageProps> = async ({ params }) => {
     })
   }
 
+  const item: CreateRequestFormDTO = {
+    ...requestItem,
+    odNumber: odNumber.split('|').map((od) => ({ name: od })),
+  }
   return (
     <RequestForm
-      initialValues={requestItem}
+      initialValues={item}
       onFormSubmit={handleEdit}
       submitButtonText="Сохранить"
     />

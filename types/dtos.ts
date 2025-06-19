@@ -11,6 +11,11 @@ export type CreateRequestDTO = Omit<
   'id' | 'userId' | 'status' | 'createdAt' | 'updatedAt' | 'orderNumber'
 >
 
+// Form DTO with od as array of strings for easier form handling
+export type CreateRequestFormDTO = Omit<CreateRequestDTO, 'odNumber'> & {
+  odNumber: { name: string }[]
+}
+
 export type RequestTypeDTO =
   | 'OneDayDelivery'
   | 'CorrectionSale'

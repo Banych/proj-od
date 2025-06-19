@@ -48,7 +48,7 @@ const RequestActions: FC<RequestActionsProps> = ({ item, user }) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href={`/requests/${item.id}/edit`}
+              href={`/requests/${item.orderNumber}/edit`}
               className={buttonVariants({ variant: 'outline', size: 'icon' })}
               aria-label="Редактировать"
             >

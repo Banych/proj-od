@@ -1,16 +1,16 @@
 {
   // Default formatter for most files
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  
+
   // Format on save
   "editor.formatOnSave": true,
-  
+
   // Code actions on save
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit"
   },
-  
+
   // TypeScript/React files - use Prettier for formatting
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -24,7 +24,7 @@
   "[javascriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  
+
   // Other file types
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -44,7 +44,7 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  
+
   // ESLint settings
   "eslint.validate": [
     "javascript",
@@ -52,11 +52,11 @@
     "typescript",
     "typescriptreact"
   ],
-  
+
   // TypeScript settings
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.suggest.autoImports": true,
-  
+
   // Emmet settings for React
   "emmet.includeLanguages": {
     "javascriptreact": "html",

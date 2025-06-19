@@ -1,8 +1,16 @@
 import { RequestType, SalesOrganizationType } from '@/generated/prisma-client'
-import { CreateRequestDTO } from '@/types/dtos'
 import { z } from 'zod'
 
-export const requestFormValidator: z.ZodType<CreateRequestDTO> = z.object({
+export const odNumberValidator = z.object({
+  name: z
+    .string()
+    .max(10, { message: 'OD должен содержать максимум 10 символов' })
+    .regex(/^[a-zA-Z0-9]*$/, {
+      message: 'OD может содержать только буквы и цифры',
+    }),
+})
+
+export const requestFormValidator = z.object({
   type: z.nativeEnum(RequestType, {
     errorMap: () => ({ message: 'Выберите тип запроса' }),
   }),
@@ -16,6 +24,9 @@ export const requestFormValidator: z.ZodType<CreateRequestDTO> = z.object({
   date: z.date({
     errorMap: () => ({ message: 'Выберите дату' }),
   }),
+  odNumber: z
+    .array(odNumberValidator)
+    .max(10, { message: 'Максимум 10 значений OD' }),
   comment: z.string().min(1, { message: 'Введите комментарий' }).max(1000, {
     message: 'Комментарий должен содержать максимум 1000 символов',
   }),
@@ -25,3 +36,5 @@ export const requestFormValidator: z.ZodType<CreateRequestDTO> = z.object({
 })
 
 export type RequestFormValidatorType = z.infer<typeof requestFormValidator>
+
+export type RequestFormODNumberType = z.infer<typeof odNumberValidator>
