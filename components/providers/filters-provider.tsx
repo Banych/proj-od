@@ -8,6 +8,8 @@ export type RequestFilters = {
   orderNumber: string | null
   dateFrom: Date | null
   dateTo: Date | null
+  createdAtFrom: Date | null
+  createdAtTo: Date | null
   type: RequestType | null
   salesOrganization: SalesOrganizationType | null
   warehouse: string | null
@@ -25,6 +27,8 @@ export const FiltersContext = createContext<FiltersContextType>({
     orderNumber: null,
     dateFrom: null,
     dateTo: null,
+    createdAtFrom: null,
+    createdAtTo: null,
     type: null,
     salesOrganization: null,
     warehouse: null,
@@ -39,6 +43,8 @@ const FiltersProvider: FC<PropsWithChildren> = ({ children }) => {
     orderNumber: null,
     dateFrom: null,
     dateTo: null,
+    createdAtFrom: null,
+    createdAtTo: null,
     type: null,
     salesOrganization: null,
     warehouse: null,
@@ -54,6 +60,8 @@ const FiltersProvider: FC<PropsWithChildren> = ({ children }) => {
       orderNumber: null,
       dateFrom: null,
       dateTo: null,
+      createdAtFrom: null,
+      createdAtTo: null,
       type: null,
       salesOrganization: null,
       warehouse: null,

@@ -78,6 +78,12 @@ const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
         <div className="flex items-center">
           <FormattedDate date={item.date} formatString="dd.MM.yyyy" />
         </div>
+        <div className="flex items-center">
+          <FormattedDate
+            date={item.createdAt}
+            formatString="dd.MM.yyyy HH:mm"
+          />
+        </div>
         <div className="flex items-center">{getTypeName(item.type)}</div>
         <div className="flex items-center">
           {getSalesOrganizationName(item.salesOrganization)}

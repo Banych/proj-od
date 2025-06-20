@@ -51,7 +51,7 @@ export const DatePicker: FC<DatePickerProps> = ({
           disabled={isDisabled}
         >
           <CalendarIcon className="mr-2 size-4" />
-          {date ? format(date, 'PPP') : <span>Pick a date</span>}
+          {date ? format(date, 'PPP') : <span>Выберите дату</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

@@ -46,6 +46,8 @@ export async function GET(request: NextRequest) {
       orderNumber,
       dateFrom,
       dateTo,
+      createdAtFrom,
+      createdAtTo,
       type,
       salesOrganization,
       warehouse,
@@ -69,6 +71,8 @@ export async function GET(request: NextRequest) {
         orderNumber: z.string().nullable(),
         dateFrom: z.string().nullable(),
         dateTo: z.string().nullable(),
+        createdAtFrom: z.string().nullable(),
+        createdAtTo: z.string().nullable(),
         type: z
           .enum([
             RequestType.CORRECTION_RETURN,
@@ -99,6 +103,8 @@ export async function GET(request: NextRequest) {
         orderNumber: url.searchParams.get('orderNumber'),
         dateFrom: url.searchParams.get('dateFrom'),
         dateTo: url.searchParams.get('dateTo'),
+        createdAtFrom: url.searchParams.get('createdAtFrom'),
+        createdAtTo: url.searchParams.get('createdAtTo'),
         type: url.searchParams.get('type'),
         salesOrganization: url.searchParams.get('salesOrganization'),
         warehouse: url.searchParams.get('warehouse'),
@@ -165,7 +171,32 @@ export async function GET(request: NextRequest) {
       whereClause = {
         ...whereClause,
         date: {
+          ...('date' in whereClause && typeof whereClause.date === 'object'
+            ? whereClause.date
+            : {}),
           lte: endOfDay(parse(dateTo, 'yyyy-MM-dd', new Date())),
+        },
+      }
+    }
+
+    if (createdAtFrom) {
+      whereClause = {
+        ...whereClause,
+        createdAt: {
+          gte: startOfDay(parse(createdAtFrom, 'yyyy-MM-dd', new Date())),
+        },
+      }
+    }
+
+    if (createdAtTo) {
+      whereClause = {
+        ...whereClause,
+        createdAt: {
+          ...('createdAt' in whereClause &&
+          typeof whereClause.createdAt === 'object'
+            ? whereClause.createdAt
+            : {}),
+          lte: endOfDay(parse(createdAtTo, 'yyyy-MM-dd', new Date())),
         },
       }
     }

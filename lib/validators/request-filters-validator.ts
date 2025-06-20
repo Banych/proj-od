@@ -1,21 +1,12 @@
 import { RequestType, SalesOrganizationType } from '@/generated/prisma-client'
 import { z } from 'zod'
 
-/*
-type RequestFilters = {
-  orderNumber: string
-  dateFrom: Date
-  dateTo: Date
-  type: RequestType
-  salesOrganization: SalesOrganizationType
-  warehouse: string
-}
-  */
-
 export const requestFiltersValidator = z.object({
   orderNumber: z.string().nullable().optional(),
   dateFrom: z.date().nullable().optional(),
   dateTo: z.date().nullable().optional(),
+  createdAtFrom: z.date().nullable().optional(),
+  createdAtTo: z.date().nullable().optional(),
   type: z
     .enum([
       RequestType.CORRECTION_RETURN,

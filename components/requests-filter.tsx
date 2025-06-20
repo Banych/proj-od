@@ -48,6 +48,8 @@ const RequestsFilter = () => {
       orderNumber: filters.orderNumber,
       dateFrom: filters.dateFrom,
       dateTo: filters.dateTo,
+      createdAtFrom: filters.createdAtFrom,
+      createdAtTo: filters.createdAtTo,
       type: filters.type,
       salesOrganization: filters.salesOrganization,
       warehouse: filters.warehouse,
@@ -137,6 +139,34 @@ const RequestsFilter = () => {
               <Controller
                 control={control}
                 name="dateTo"
+                render={({ field: { onChange, ...field } }) => (
+                  <DatePicker
+                    className="col-span-3 col-start-3"
+                    date={field.value || undefined}
+                    onSelect={(e) => onChange(e)}
+                  />
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-5 grid-rows-1 gap-2">
+              <label htmlFor="createdAtFrom">Создано с</label>
+              <Controller
+                control={control}
+                name="createdAtFrom"
+                render={({ field: { onChange, ...field } }) => (
+                  <DatePicker
+                    className="col-span-3 col-start-3"
+                    date={field.value || undefined}
+                    onSelect={(e) => onChange(e)}
+                  />
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-5 grid-rows-1 gap-2">
+              <label htmlFor="createdAtTo">Создано по</label>
+              <Controller
+                control={control}
+                name="createdAtTo"
                 render={({ field: { onChange, ...field } }) => (
                   <DatePicker
                     className="col-span-3 col-start-3"

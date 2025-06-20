@@ -60,7 +60,7 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
         <RequestActions item={item} user={user} />
       </div>
 
-      <div className="grid auto-rows-auto grid-cols-4 gap-2">
+      <div className="grid auto-rows-auto grid-cols-3 md:grid-cols-5 gap-2">
         <div className="flex flex-col gap-2">
           <div className="font-bold">Тип запроса:</div>
           <div>{formattedType}</div>
@@ -81,6 +81,15 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
           <div className="font-bold">Дата:</div>
           <div>
             <FormattedDate date={item.date} formatString="dd.MM.yyyy" />
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <div className="font-bold">Создано:</div>
+          <div>
+            <FormattedDate
+              date={item.createdAt}
+              formatString="dd.MM.yyyy HH:mm"
+            />
           </div>
         </div>
       </div>

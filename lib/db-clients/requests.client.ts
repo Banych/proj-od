@@ -34,6 +34,20 @@ const client = {
       query.append('dateTo', format(params.dateTo as Date, 'yyyy-MM-dd'))
     }
 
+    if (params.createdAtFrom) {
+      query.append(
+        'createdAtFrom',
+        format(params.createdAtFrom as Date, 'yyyy-MM-dd')
+      )
+    }
+
+    if (params.createdAtTo) {
+      query.append(
+        'createdAtTo',
+        format(params.createdAtTo as Date, 'yyyy-MM-dd')
+      )
+    }
+
     if (params.type) {
       query.append('type', String(params.type))
     }

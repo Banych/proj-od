@@ -118,7 +118,7 @@ const RequestsList: FC<RequestsListProps> = ({
 
   return (
     <ScrollArea className="grow">
-      <div className="grid auto-rows-auto grid-cols-7 gap-2">
+      <div className="grid auto-rows-auto grid-cols-8 gap-2">
         <TableHeaderCell
           value="orderNumber"
           onSort={onSort}
@@ -134,6 +134,14 @@ const RequestsList: FC<RequestsListProps> = ({
           sortOrder={sortOrder}
         >
           Дата
+        </TableHeaderCell>
+        <TableHeaderCell
+          value="createdAt"
+          onSort={onSort}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+        >
+          Создано
         </TableHeaderCell>
         <TableHeaderCell
           value="type"
