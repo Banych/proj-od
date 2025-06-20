@@ -31,6 +31,7 @@ model Request {
   type              RequestType
   salesOrganization SalesOrganizationType
   status            RequestStatus         @default(CREATED)
+  priority          RequestPriority?
   warehouse         String
   date              DateTime
   odNumber          String                @default("")
@@ -73,6 +74,11 @@ enum RequestStatus {
   CREATED
   COMPLETED
   INCORRECT
+}
+
+enum RequestPriority {
+  MEDIUM
+  HIGH
 }
 
 enum Role {

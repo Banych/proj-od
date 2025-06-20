@@ -118,14 +118,14 @@ const RequestsList: FC<RequestsListProps> = ({
 
   return (
     <ScrollArea className="grow">
-      <div className="grid auto-rows-auto grid-cols-8 gap-2">
+      <div className="grid auto-rows-auto grid-cols-9 gap-2">
         <TableHeaderCell
           value="orderNumber"
           onSort={onSort}
           sortBy={sortBy}
           sortOrder={sortOrder}
         >
-          Номер
+          №
         </TableHeaderCell>
         <TableHeaderCell
           value="date"
@@ -150,6 +150,14 @@ const RequestsList: FC<RequestsListProps> = ({
           sortOrder={sortOrder}
         >
           Тип
+        </TableHeaderCell>
+        <TableHeaderCell
+          value="priority"
+          onSort={onSort}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+        >
+          Приоритет
         </TableHeaderCell>
         <TableHeaderCell
           value="salesOrganization"
@@ -186,7 +194,7 @@ const RequestsList: FC<RequestsListProps> = ({
               user={user}
             />
           ))}
-        <li className="col-span-7 flex items-center justify-center gap-x-4 text-sm text-zinc-500">
+        <li className="col-span-8 flex items-center justify-center gap-x-4 text-sm text-zinc-500">
           {isFetching ? (
             <>
               <Loader2 className="size-4 animate-spin" />

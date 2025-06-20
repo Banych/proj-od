@@ -25,9 +25,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import defaultPriorities from '@/constants/default-priorities'
 import defaultRequestTypes from '@/constants/default-request-types'
 import salesOrganizations from '@/constants/default-sales-organizations'
-import { RequestType, SalesOrganizationType } from '@/generated/prisma-client'
+import {
+  RequestPriority,
+  RequestType,
+  SalesOrganizationType,
+} from '@/generated/prisma-client'
 import useRequestFilters from '@/hooks/use-request-filters'
 import {
   RequestFiltersType,
@@ -52,6 +57,7 @@ const RequestsFilter = () => {
       createdAtTo: filters.createdAtTo,
       type: filters.type,
       salesOrganization: filters.salesOrganization,
+      priority: filters.priority,
       warehouse: filters.warehouse,
       rfRu: filters.rfRu,
     },
@@ -98,7 +104,7 @@ const RequestsFilter = () => {
         </SheetHeader>
         <div className="grow">
           <form
-            className="grid grid-cols-1 grid-rows-7 gap-3"
+            className="grid grid-cols-1 grid-rows-8 gap-3"
             onSubmit={handleFormSubmit(handleSubmit)}
             id="filter-form"
           >
@@ -221,6 +227,31 @@ const RequestsFilter = () => {
                           value={salesOrganization.value}
                         >
                           {salesOrganization.text}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-5 grid-rows-1 gap-2">
+              <label htmlFor="priority">Приоритет</label>
+              <Controller
+                control={control}
+                name="priority"
+                render={({ field: { onChange, ...field } }) => (
+                  <Select
+                    value={field.value || undefined}
+                    onValueChange={(e) => onChange(e as RequestPriority)}
+                  >
+                    <SelectTrigger className="col-span-3 col-start-3">
+                      <SelectValue placeholder="Выберите приоритет" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {defaultPriorities.map((priority) => (
+                        <SelectItem key={priority.value} value={priority.value}>
+                          {priority.text}
                         </SelectItem>
                       ))}
                     </SelectContent>

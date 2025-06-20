@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import defaultPriorities from '@/constants/default-priorities'
 import defaultRequestTypes from '@/constants/default-request-types'
 import salesOrganizations from '@/constants/default-sales-organizations'
 import {
@@ -56,6 +57,7 @@ const RequestForm: FC<RequestFormProps> = ({
       type: initialValues?.type || RequestType.ONE_DAY_DELIVERY,
       salesOrganization:
         initialValues?.salesOrganization || SalesOrganizationType.SALES_3801,
+      priority: initialValues?.priority || null,
       warehouse: initialValues?.warehouse || '',
       date: initialValues?.date || new Date(),
       comment: initialValues?.comment || '',
@@ -76,6 +78,7 @@ const RequestForm: FC<RequestFormProps> = ({
       const apiData: CreateRequestDTO = {
         type: value.type!,
         salesOrganization: value.salesOrganization!,
+        priority: value.priority || null,
         warehouse: value.warehouse,
         date: value.date,
         comment: value.comment,
@@ -187,6 +190,34 @@ const RequestForm: FC<RequestFormProps> = ({
                       value={salesOrganization.value}
                     >
                       {salesOrganization.text}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {error && (
+                <span className="text-red-500 text-sm">{error.message}</span>
+              )}
+            </div>
+          )}
+        />
+        <Controller
+          name="priority"
+          control={control}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <div className="flex flex-col gap-1 flex-1">
+              <Select
+                value={value || ''}
+                onValueChange={(val) => onChange(val || null)}
+                disabled={isPending}
+              >
+                <SelectTrigger className={error ? 'border-red-500' : ''}>
+                  <SelectValue placeholder="Приоритет" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="null">Не выбран</SelectItem>
+                  {defaultPriorities.map((priority) => (
+                    <SelectItem key={priority.value} value={priority.value}>
+                      {priority.text}
                     </SelectItem>
                   ))}
                 </SelectContent>

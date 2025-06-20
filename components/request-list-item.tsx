@@ -15,9 +15,14 @@ import {
 } from '@/components/ui/tooltip'
 import { RequestStatus, Role } from '@/generated/prisma-client'
 import { useToast } from '@/hooks/use-toast'
-import { getSalesOrganizationName, getTypeName } from '@/lib/utils'
+import {
+  getPriorityName,
+  getSalesOrganizationName,
+  getTypeName,
+} from '@/lib/utils'
 import { RequestWithUser, UserDTO } from '@/types/dtos'
 import Link from 'next/link'
+import { Badge } from './ui/badge'
 
 type RequestItemProps = {
   item: RequestWithUser
@@ -85,6 +90,17 @@ const RequestListItem = forwardRef<HTMLDivElement, RequestItemProps>(
           />
         </div>
         <div className="flex items-center">{getTypeName(item.type)}</div>
+        <div className="flex items-center">
+          {item.priority === 'HIGH' || item.priority === 'MEDIUM' ? (
+            <Badge
+              variant={item.priority === 'HIGH' ? 'destructive' : 'outline'}
+            >
+              {getPriorityName(item.priority)}
+            </Badge>
+          ) : (
+            <span className="text-gray-500">—</span>
+          )}
+        </div>
         <div className="flex items-center">
           {getSalesOrganizationName(item.salesOrganization)}
         </div>

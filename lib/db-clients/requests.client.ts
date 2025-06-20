@@ -56,6 +56,10 @@ const client = {
       query.append('salesOrganization', String(params.salesOrganization))
     }
 
+    if (params.priority) {
+      query.append('priority', String(params.priority))
+    }
+
     if (params.warehouse) {
       query.append('warehouse', String(params.warehouse))
     }

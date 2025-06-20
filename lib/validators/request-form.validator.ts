@@ -1,4 +1,8 @@
-import { RequestType, SalesOrganizationType } from '@/generated/prisma-client'
+import {
+  RequestPriority,
+  RequestType,
+  SalesOrganizationType,
+} from '@/generated/prisma-client'
 import { z } from 'zod'
 
 export const odNumberValidator = z.object({
@@ -18,6 +22,7 @@ export const requestFormValidator = z.object({
   salesOrganization: z.nativeEnum(SalesOrganizationType, {
     errorMap: () => ({ message: 'Выберите организацию' }),
   }),
+  priority: z.nativeEnum(RequestPriority).nullable().optional(),
   warehouse: z
     .string()
     .min(1, { message: 'Введите номер склада' })

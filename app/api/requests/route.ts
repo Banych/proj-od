@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
 import {
+  RequestPriority,
   RequestStatus,
   RequestType,
   Role,
@@ -50,6 +51,7 @@ export async function GET(request: NextRequest) {
       createdAtTo,
       type,
       salesOrganization,
+      priority,
       warehouse,
       rfRu,
     } = z
@@ -91,6 +93,9 @@ export async function GET(request: NextRequest) {
             SalesOrganizationType.SALES_3806,
           ])
           .nullable(),
+        priority: z
+          .enum([RequestPriority.MEDIUM, RequestPriority.HIGH])
+          .nullable(),
         warehouse: z.string().nullable(),
         rfRu: z.string().nullable(),
       })
@@ -107,6 +112,7 @@ export async function GET(request: NextRequest) {
         createdAtTo: url.searchParams.get('createdAtTo'),
         type: url.searchParams.get('type'),
         salesOrganization: url.searchParams.get('salesOrganization'),
+        priority: url.searchParams.get('priority'),
         warehouse: url.searchParams.get('warehouse'),
         rfRu: url.searchParams.get('rfRu'),
       })
@@ -210,6 +216,10 @@ export async function GET(request: NextRequest) {
         ...whereClause,
         salesOrganization,
       }
+    }
+
+    if (priority) {
+      whereClause = { ...whereClause, priority }
     }
 
     if (warehouse) {

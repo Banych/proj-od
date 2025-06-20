@@ -9,8 +9,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { RequestStatus } from '@/generated/prisma-client'
-import { getSalesOrganizationName, getTypeName } from '@/lib/utils'
+import { RequestPriority, RequestStatus } from '@/generated/prisma-client'
+import {
+  getPriorityName,
+  getSalesOrganizationName,
+  getTypeName,
+} from '@/lib/utils'
 import { MessageWithUser, RequestWithUser, UserDTO } from '@/types/dtos'
 import Link from 'next/link'
 import { Badge } from './ui/badge'
@@ -56,6 +60,17 @@ const RequestDetails: FC<RequestDetailsProps> = ({ item, messages, user }) => {
               </span>
             </Link>
           </Badge>
+          {item.priority && (
+            <Badge
+              variant={
+                item.priority === RequestPriority.HIGH
+                  ? 'destructive'
+                  : 'outline'
+              }
+            >
+              {getPriorityName(item.priority)}
+            </Badge>
+          )}
         </h3>
         <RequestActions item={item} user={user} />
       </div>

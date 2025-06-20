@@ -22,6 +22,8 @@ export type RequestTypeDTO =
   | 'CorrectionReturn'
   | 'Sampling'
 
+export type RequestPriorityDTO = 'Medium' | 'High'
+
 export type SalesOrganizationTypeDTO =
   | '3801'
   | '3802'

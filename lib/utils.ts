@@ -1,14 +1,16 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+import defaultPriorities from '@/constants/default-priorities'
 import defaultRequestTypes from '@/constants/default-request-types'
+import { defaultRoles } from '@/constants/default-roles'
 import defaultSalesOrganizationTypes from '@/constants/default-sales-organizations'
 import {
+  RequestPriority,
   RequestType,
   Role,
   SalesOrganizationType,
 } from '@/generated/prisma-client'
-import { defaultRoles } from '@/constants/default-roles'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -25,4 +27,8 @@ export function getSalesOrganizationName(value: SalesOrganizationType) {
 
 export function getRoleName(value: Role) {
   return defaultRoles.find((role) => role.value === value)?.text
+}
+
+export function getPriorityName(value: RequestPriority) {
+  return defaultPriorities.find((priority) => priority.value === value)?.text
 }

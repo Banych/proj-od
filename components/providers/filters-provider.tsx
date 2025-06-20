@@ -2,7 +2,11 @@
 
 import { createContext, FC, PropsWithChildren, useState } from 'react'
 
-import { RequestType, SalesOrganizationType } from '@/generated/prisma-client'
+import {
+  RequestPriority,
+  RequestType,
+  SalesOrganizationType,
+} from '@/generated/prisma-client'
 
 export type RequestFilters = {
   orderNumber: string | null
@@ -12,6 +16,7 @@ export type RequestFilters = {
   createdAtTo: Date | null
   type: RequestType | null
   salesOrganization: SalesOrganizationType | null
+  priority: RequestPriority | null
   warehouse: string | null
   rfRu: string | null
 }
@@ -31,6 +36,7 @@ export const FiltersContext = createContext<FiltersContextType>({
     createdAtTo: null,
     type: null,
     salesOrganization: null,
+    priority: null,
     warehouse: null,
     rfRu: null,
   },
@@ -47,6 +53,7 @@ const FiltersProvider: FC<PropsWithChildren> = ({ children }) => {
     createdAtTo: null,
     type: null,
     salesOrganization: null,
+    priority: null,
     warehouse: null,
     rfRu: null,
   })
@@ -64,6 +71,7 @@ const FiltersProvider: FC<PropsWithChildren> = ({ children }) => {
       createdAtTo: null,
       type: null,
       salesOrganization: null,
+      priority: null,
       warehouse: null,
       rfRu: null,
     })

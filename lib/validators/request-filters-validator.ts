@@ -1,4 +1,8 @@
-import { RequestType, SalesOrganizationType } from '@/generated/prisma-client'
+import {
+  RequestPriority,
+  RequestType,
+  SalesOrganizationType,
+} from '@/generated/prisma-client'
 import { z } from 'zod'
 
 export const requestFiltersValidator = z.object({
@@ -25,6 +29,10 @@ export const requestFiltersValidator = z.object({
       SalesOrganizationType.SALES_3805,
       SalesOrganizationType.SALES_3806,
     ])
+    .nullable()
+    .optional(),
+  priority: z
+    .enum([RequestPriority.MEDIUM, RequestPriority.HIGH])
     .nullable()
     .optional(),
   warehouse: z.string().nullable().optional(),
