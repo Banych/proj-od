@@ -1,74 +1,134 @@
 # Project OD
 
-This project is a web application built with Next.js. It includes user authentication, request management, and messaging functionalities.
+Веб-приложение для управления заявками, построенное на Next.js. Включает в себя аутентификацию пользователей, управление заявками и систему сообщений.
 
-## Features
+## Основные возможности
 
-- **User Authentication**: Secure login and registration using NextAuth.js.
-- **Request Management**: Create, view, edit, and delete requests.
-- **Messaging**: Send and receive messages related to requests.
-- **Profile Management**: Update user profile information.
-- **Role-Based Access Control**: Different functionalities based on user roles (Admin, Dispatcher, Manager).
-- **Admin Dashboard**: Manage users and requests with an intuitive interface.
-- **Database Management**: Uses Prisma as the ORM with PostgreSQL as the primary database.
+- **Аутентификация пользователей**: Безопасная авторизация и регистрация с использованием NextAuth.js
+- **Управление заявками**: Создание, просмотр, редактирование и удаление заявок
+- **Система сообщений**: Отправка и получение сообщений связанных с заявками
+- **Управление профилем**: Обновление информации профиля пользователя
+- **Контроль доступа на основе ролей**: Различный функционал в зависимости от роли пользователя (Администратор, Диспетчер, Менеджер)
+- **Панель администратора**: Управление пользователями и заявками с интуитивным интерфейсом
+- **Управление базой данных**: Использует Prisma в качестве ORM с PostgreSQL как основной базой данных
 
-## Technologies Used
+## Используемые технологии
 
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- NextAuth.js for authentication
-- Radix UI for components
-- Prisma for database management
-- PostgreSQL (or your configured database)
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Стилизация**: Tailwind CSS, Radix UI компоненты
+- **Аутентификация**: NextAuth.js
+- **База данных**: PostgreSQL с Prisma ORM
+- **Валидация**: Zod
+- **Формы**: React Hook Form
+- **Иконки**: Lucide React
+- **Дата/время**: date-fns
 
-## Database
+## Быстрый старт
 
-The application uses Prisma as the ORM and supports PostgreSQL as the primary database. Ensure your database is properly configured in the `.env` file by updating the `DATABASE_URL` variable.
+### Предварительные требования
 
-## API Endpoints
+- Node.js 18+
+- PostgreSQL база данных
+- Yarn или npm
 
-### `POST /api/auth/register`
+### Установка
 
-- **Description**: Registers a new user.
-- **Request Body**:
-  ```json
-  {
-    "username": "string",
-    "password": "string"
-  }
-  ```
-- **Response**:
-  - `201`: User created successfully.
-  - `400`: Username and password are required.
-  - `409`: User with this username already exists.
-  - `500`: An unexpected error occurred.
+1. Клонируйте репозиторий:
 
-## Setup
-
-To work with this application, you need to set up a `.env` file. You can use the `.env.example` file as a template.
-
-### Environment Variables
-
-Create a `.env` file with the following variables:
-
-```
-NEXTAUTH_SECRET=<your key> # or your secret
-NEXTAUTH_URL=http://localhost:3000 # or your domain
-DATABASE_URL=postgresql://<username>:<password>@<host>:<port>/<database>
+```bash
+git clone <repository-url>
+cd proj-od
 ```
 
-## Deployment
+2. Установите зависимости:
 
-For detailed instructions on how to deploy the project with NextAuth, refer to the [NextAuth.js Deployment Documentation](https://next-auth.js.org/deployment).
+```bash
+yarn install
+# или
+npm install
+```
 
-For detailed instructions on how to deploy the project with Next.js, refer to the [Next.js Deployment Documentation](https://nextjs.org/docs/14/app/building-your-application/deploying).
+3. Настройте переменные окружения:
 
-For database deployment, ensure your PostgreSQL instance is properly configured and accessible.
+```bash
+cp .env.example .env
+```
 
-## Additional Notes
+4. Обновите `.env` файл с вашими настройками:
 
-- The `admin` section of the application includes tools for managing users and requests.
-- The `requests` module now supports advanced filtering and sorting.
-- The `profile` module includes enhanced validation for user data.
+```env
+NEXTAUTH_SECRET=<ваш-секретный-ключ>
+NEXTAUTH_URL=http://localhost:3000
+DATABASE_URL="postgresql://username:password@localhost:5432/proj_od"
+DIRECT_URL="postgresql://username:password@localhost:5432/proj_od"
+```
+
+5. Выполните миграции базы данных:
+
+```bash
+npx prisma migrate dev
+```
+
+6. Запустите проект в режиме разработки:
+
+```bash
+yarn dev
+```
+
+Приложение будет доступно по адресу `http://localhost:3000`
+
+## Структура проекта
+
+```
+proj-od/
+├── app/                    # Next.js App Router
+│   ├── api/               # API маршруты
+│   ├── auth/              # Страницы аутентификации
+│   ├── admin/             # Админ панель
+│   ├── profile/           # Профиль пользователя
+│   └── requests/          # Управление заявками
+├── components/            # React компоненты
+│   ├── ui/               # UI компоненты
+│   └── providers/        # Провайдеры контекста
+├── lib/                  # Утилиты и конфигурация
+├── prisma/               # Схема и миграции БД
+├── types/                # TypeScript типы
+└── docs/                 # Документация
+```
+
+## Доступные скрипты
+
+- `yarn dev` - Запуск в режиме разработки
+- `yarn build` - Сборка для продакшена
+- `yarn start` - Запуск продакшен версии
+- `yarn lint` - Проверка кода линтером
+- `yarn format` - Форматирование кода
+- `yarn type-check` - Проверка типов TypeScript
+
+## Роли пользователей
+
+- **ADMIN**: Полный доступ ко всем функциям системы
+- **MANAGER**: Управление заявками, просмотр пользователей
+- **DISPATCHER**: Обработка заявок, отправка сообщений
+
+## Документация
+
+Подробная документация находится в папке `/docs`:
+
+- [Руководство по установке](./docs/installation.md)
+- [API Справочник](./docs/api-reference.md)
+- [Управление базой данных](./docs/database.md)
+- [Деплой](./docs/deployment.md)
+- [Разработка](./docs/development.md)
+
+## Поддержка
+
+При возникновении вопросов или проблем, пожалуйста, создайте issue в репозитории.
+
+## Лицензия
+
+Этот проект предназначен для внутреннего использования.
+
+---
+
+_Документация создана с помощью Claude Sonnet 3.5_
